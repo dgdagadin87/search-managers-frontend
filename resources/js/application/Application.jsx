@@ -2,7 +2,7 @@ import 'core-js/es6/map';
 import 'core-js/es6/set';
 import 'core-js/es6/promise';
 
-import '../../css/style.css';
+import '../css/Css';
 
 import React from 'react';
 import reactDom from 'react-dom';
@@ -26,13 +26,13 @@ const rootDomComponent = document.getElementById('main-body');
 
 const store = createStore(allReducers, applyMiddleware(thunk));
 
-/*Request.send({
+Request.send({
     url: createUrl(defaultSettings, urlSettings['common']),
     method: 'GET'
 })
 .then((data) => {
 
-    const {user, sites, notifications} = data;
+    /*const {user, sites, notifications} = data;
 
     store.dispatch({
         type: actions.COMMON_SET_USER_DATA,
@@ -42,7 +42,9 @@ const store = createStore(allReducers, applyMiddleware(thunk));
     store.dispatch({
         type: actions.NOTIFICATIONS_SET_DATA,
         payload: {...notifications}
-    });
+    });*/
+
+    console.log(data);
 
     reactDom.render(
         <Provider store={store}>
@@ -50,7 +52,7 @@ const store = createStore(allReducers, applyMiddleware(thunk));
                 <Switch>
                     <Route
                         path="/"
-                        render={ (props) => <AppContainer {...props} commonData={data} /> }
+                        render={ (props) => <AppContainer {...props} commonData={{}} /> }
                     />
                 </Switch>
             </ConnectedRouter>
@@ -62,9 +64,8 @@ const store = createStore(allReducers, applyMiddleware(thunk));
     console.log('error', error);
     const {message} = error;
 });
-*/
 
-reactDom.render(
+/*reactDom.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <Switch>
@@ -76,4 +77,4 @@ reactDom.render(
         </ConnectedRouter>
     </Provider>,
     rootDomComponent
-);
+);*/

@@ -17,7 +17,7 @@ class IndexModule extends Component {
 
     render() {
 
-        return <div style={{paddingTop:'10px'}}>Orders</div>;
+        return <div style={{paddingTop:'10px'}}>Customers</div>;
     }
 
 };

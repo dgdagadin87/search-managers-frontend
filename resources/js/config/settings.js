@@ -1,7 +1,7 @@
 const defaultSettings = {
     'serverHost' : 'localhost',
-    'serverPort': 9000,
-    'serverProtocol': 'http'
+    'serverPort': 44363,
+    'serverProtocol': 'https'
 };
 
 const pageSettings = {
@@ -12,10 +12,8 @@ const pageSettings = {
 };
 
 const urlSettings = {
-    'common': '/_api/common',
-    'index': '/_api/index',
-    'statistics': '/_api/statistics',
-    'statchart': '/_api/statchart'
+    'common': '/Home/Common',
+    'orders': '/Home/Orders'
 };
 
 export {defaultSettings, pageSettings, urlSettings};

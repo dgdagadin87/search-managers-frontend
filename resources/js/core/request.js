@@ -4,6 +4,8 @@ export default class Request {
 
     static send(config) {
 
+        $.support.cors = true;
+
         return new Promise((resolve, reject) => {
 
             const queryConfig = {

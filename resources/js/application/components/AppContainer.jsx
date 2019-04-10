@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import Header from './parts/Header';
 
 import IndexModule from './modules/IndexModule';
+import CustomersModule from './modules/CustomersModule';
 
 
 const mapStateToProps = (state) => {
@@ -24,9 +25,15 @@ class AppContainer extends Component {
             <div className="main-container">
                 <div className="main-center">
                     <Header user={user} />
-                    <Switch>
-                        <Route exact path="/" render={ (props) => <IndexModule {...props} /> } />
-                    </Switch>
+                    <div className="main-content">
+                        <Switch>
+                            <Route exact path="/" render={ (props) => <IndexModule {...props} /> } />
+                            <Route exact path="/customers" render={ (props) => <CustomersModule {...props} /> } />
+                        </Switch>
+                    </div>
+                </div>
+                <div className="main-footer">
+                    Footer
                 </div>
             </div>
         );
