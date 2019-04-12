@@ -32,19 +32,10 @@ Request.send({
 })
 .then((data) => {
 
-    /*const {user, sites, notifications} = data;
-
     store.dispatch({
         type: actions.COMMON_SET_USER_DATA,
-        payload: {user, sites}
+        payload: {...data}
     });
-
-    store.dispatch({
-        type: actions.NOTIFICATIONS_SET_DATA,
-        payload: {...notifications}
-    });*/
-
-    console.log(data);
 
     reactDom.render(
         <Provider store={store}>
@@ -63,18 +54,5 @@ Request.send({
 .catch((error) => {
     console.log('error', error);
     const {message} = error;
+    alert(message);
 });
-
-/*reactDom.render(
-    <Provider store={store}>
-        <ConnectedRouter history={history}>
-            <Switch>
-                <Route
-                    path="/"
-                    render={ (props) => <AppContainer {...props} commonData={{}} /> }
-                />
-            </Switch>
-        </ConnectedRouter>
-    </Provider>,
-    rootDomComponent
-);*/

@@ -2,9 +2,7 @@ import actions from '../../../config/actions';
 
 const initialState = {
     userData: {},
-    sitesData: [],
-    errors: [],
-    title: '4stor - Страшные истории - начало'
+    title: ''
 };
 
 export default function (state = initialState, action) {
@@ -13,6 +11,10 @@ export default function (state = initialState, action) {
 
         case actions.COMMON_SET_USER_DATA:
             return {...state, userData: action.payload};
+
+        case actions.COMMON_SET_TITLE:
+            document.title = 'Система оформления заказов - ' + action.payload;
+            return {...state, title: action.payload};
 
         default:
             return state;

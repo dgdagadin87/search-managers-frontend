@@ -1,4 +1,4 @@
-import actions from '../../../config/actions';
+import actions from '../../config/actions';
 
 export const changeTitle = (title) => {
     return {

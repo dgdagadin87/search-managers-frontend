@@ -73,18 +73,19 @@ class Header extends Component {
 
         return (
             <span>
-                <Icon style={{fontSize: '17px', color: '#08c'}} type="setting" theme="filled" />
-                <Icon style={{ fontSize: '14px' }} type="caret-down" theme="filled" />
+                <Icon style={{fontSize: '17px', color: '#888' }} type="setting" theme="filled" />
+                <Icon style={{ fontSize: '11px', color: '#08c' }} type="caret-down" theme="filled" />
             </span>
         );
     }
 
     _renderUserName(){
 
+        const {user = {}} = this.props;
+
         return (
             <Fragment>
-                <Icon type="user" />
-                <span style={{paddingLeft:'5px'}}>Александр</span>
+                <span style={{paddingLeft:'5px'}}>{user['name']}</span>
             </Fragment>
         );
     }
@@ -101,23 +102,23 @@ class Header extends Component {
                     mode="horizontal"
                 >
                     <Menu.Item key="orders">
-                        <Icon type="file-text" />
+                        <Icon type="file-text" style={{color:'rgba(0, 0, 0, 0.65)'}} />
                         <span>Заказы</span>
                         <Link to="/" />
                     </Menu.Item>
                     <Menu.Item key="customers">
-                        <Icon type="usergroup-add" />
+                        <Icon type="usergroup-add" style={{color:'rgba(0, 0, 0, 0.65)'}} />
                         <span>Заказчики</span>
                         <Link to="/customers" />
                     </Menu.Item>
-                    <Menu.Item key="layers">
-                        <Icon type="switcher" />Покрытия
+                    <Menu.Item key="layers" disabled={true}>
+                        <Icon type="switcher" style={{color:'rgba(0, 0, 0, 0.65)'}} />Покрытия
                     </Menu.Item>
-                    <Menu.Item key="reports">
-                        <Icon type="fund" />Отчеты
+                    <Menu.Item key="reports" disabled={true}>
+                        <Icon type="fund" style={{color:'rgba(0, 0, 0, 0.65)'}} />Отчеты
                     </Menu.Item>
-                    <Menu.Item key="links">
-                        <Icon type="link" />Ссылки
+                    <Menu.Item key="links" disabled={true}>
+                        <Icon type="link" style={{color:'rgba(0, 0, 0, 0.65)'}} />Ссылки
                     </Menu.Item>
                     <Menu.Item
                         key="user"
