@@ -8,8 +8,8 @@ export const asyncGetOrders = (sort = {}, filter = {}, paging = {}) => {
     return dispatch => {
 
         const {sortBy, sortType} = sort;
-        const {searchString = '', onlyMy = false, onlyActive = false} = paging;
-        const {page = 1} = filter;
+        const {searchString = '', onlyMy = false, onlyActive = false} = filter;
+        const {page = 1} = paging;
 
         dispatch({ type: actions['ORDERS_SET_LOADING'], payload: true });
         dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Идёт загрузка данных...' });

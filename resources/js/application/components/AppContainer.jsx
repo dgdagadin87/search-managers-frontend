@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import Header from './parts/Header';
 
 import OrdersModule from './modules/orders/OrdersModule';
+import OrderModule from './modules/order/OrderModule';
 import CustomersModule from './modules/customers/CustomersModule';
 
 
@@ -27,8 +28,9 @@ class AppContainer extends Component {
                     <Header user={userData} />
                     <div className="main-content">
                         <Switch>
+                            <Route path="/customers" render={ (props) => <CustomersModule {...props} /> } />
+                            <Route path="/orders/:id" render={ (props) => <OrderModule {...props} /> } />
                             <Route exact path="/" render={ (props) => <OrdersModule {...props} /> } />
-                            <Route exact path="/customers" render={ (props) => <CustomersModule {...props} /> } />
                         </Switch>
                     </div>
                 </div>

@@ -85,8 +85,11 @@ body {
 .order-list .ant-table-thead>tr>th, .order-list .ant-table-tbody>tr>td {
     border-bottom: 1px solid #ccc;
 }
-.order-list .ant-input {
+.order-list .ant-input, .order .ant-input {
     border-color: #ccc;
+}
+.order-list .ant-input:hover, .order .ant-input:hover {
+    border-color: #1890FF;
 }
 /*.order-list th {
     background: #fafafa !important;
@@ -98,6 +101,8 @@ body {
 .order-list .ant-tag {
     font-size: 11px;
     padding:0 3px;
+    border-color: #ccc;
+    color: rgba(0,0,0,0.85);
 }
 
 .main-footer {
@@ -113,4 +118,8 @@ body {
     margin-bottom: 20px;
     padding: 30px 50px;
     margin: 20px 0;
+}
+
+.details-card .ant-card-body, .details-card .ant-card-head {
+    background: #fbfbfb;
 }

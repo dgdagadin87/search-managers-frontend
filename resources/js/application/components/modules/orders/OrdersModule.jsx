@@ -3,6 +3,8 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import {Link} from 'react-router-dom';
+
 import {
     changeTitle
 } from '../../../actions/common';
@@ -56,14 +58,14 @@ class OrdersModule extends Component {
         super(...props);
 
         this._stateColors = {
-            '1': {name: 'Предварительный', color: '#E1E1FF'},
-            '12': {name: 'Оформление договора', color: '#FBEC5D', short: 'Оформл-е дог-ра'},
+            '1': {name: 'Предварительный', color: '#E1E1FF', short: 'Предв.'},
+            '12': {name: 'Оформление договора', color: '#FBEC5D', short: 'Оформл. дог-ра'},
             '2': {name: 'К оплате', color:'#FFE1E1'},
             '7': {name: 'Оплачен, в обработке', color: '#FFEECC', short: 'Оплачен, в обр.'},
             '3': {name: 'В работе', color: '#FFFFCC'},
-            '9': {name: 'Оформление акта', color: '#FBEC5D', short: 'Оформл-е акта'},
-            '17': {name: 'В оплате по акту', color: '#FBEC5D'},
-            '6': {name: 'Оплачен, выполнен', color: '#D8FFD8'},
+            '9': {name: 'Оформление акта', color: '#FBEC5D', short: 'Оформл. акта'},
+            '17': {name: 'В оплате по акту', color: '#FBEC5D', short: 'Опл. п/а'},
+            '6': {name: 'Оплачен, выполнен', color: '#D8FFD8', short: 'Опл., вып.'},
             '8': {name: 'Выполнен без оплаты', color: '#CCCCCC', short: 'Выполнен, б/о'},
             '4': {name: 'Выполнен', color: '#C8FFC8'},
             '5': {name: 'Отменен', color: '#CCCCCC'},
@@ -169,7 +171,7 @@ class OrdersModule extends Component {
             <Row>
                 <Col span={18}>
                     <Search
-                        placeholder="Поиск заказов"
+                        placeholder="Поиск заказов по названию, номеру договора, менеджеру, клиенту, организации"
                         enterButton={true}
                         size="default"
                         allowClear={true}
@@ -190,12 +192,17 @@ class OrdersModule extends Component {
 
         const columns = [
             {
-                title: () => <span>Номер договора</span>,
-                dataIndex: 'contractNumber',
+                title: () => <span>Название</span>,
+                dataIndex: 'name',
                 key: 'contractNumber',
-                width: 185,
+                width: 305,
                 sorter: true,
-                render: text => <a href="javascript:;">{text}</a>
+                render: (text, record) => {
+                    const substredText = text.length > 33 ? text.substr(0, 33) + '..' : text;
+                    return (
+                        <Link title={text} to={'/orders/' + record['number']}>{substredText}</Link>
+                    );
+                }
             },
             {
                 title: 'Заказчик',
@@ -204,7 +211,7 @@ class OrdersModule extends Component {
                 width: 140,
                 render: (client) => {
                     const {name = ''} = client;
-                    return <a href="javascript:;">{name}</a>;
+                    return name;
                 },
                 sorter: true
             },
@@ -231,17 +238,16 @@ class OrdersModule extends Component {
                     return agent;
                 },
                 style: {background:'red'},
-                sorter: true
+                sorter: false
             },
             {
                 title: 'Статус',
-                dataIndex: 'state',
+                dataIndex: 'stateId',
                 width: 120,
-                key: 'state',
+                key: 'stateId',
                 align: 'center',
-                render: (state) => {
-                    const { id = '0'} = state;
-                    const currentState = this._stateColors[id] || {};
+                render: (stateId) => {
+                    const currentState = this._stateColors[stateId] || {};
                     const {color = '', name = '', short = false} = currentState;
                     return <Tag title={name} style={{textTransform: 'uppercase', background:color}}>{short ? short : name}</Tag>;
                 },
@@ -288,7 +294,7 @@ class OrdersModule extends Component {
                 dataSource={correctData}
                 bordered={false}
                 size="middle"
-                pagination={{current: page, total: count}}
+                pagination={{current: page, total: count, pageSize: 20}}
                 title={() => this._renderTableFilter()}
                 onChange={this._onTableChange.bind(this)}
             />

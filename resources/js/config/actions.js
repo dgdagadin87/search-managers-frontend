@@ -11,6 +11,10 @@ const actions = {
     ORDERS_SET_ONLY_ACTIVE: 'ORDERS_SET_ONLY_ACTIVE',
     ORDERS_SET_ONLY_MY: 'ORDERS_SET_ONLY_MY',
 
+    // ORDER
+    ORDER_SET_DATA: 'ORDER_SET_DATA',
+    ORDER_SET_LOADING: 'ORDER_SET_LOADING',
+
 };
 
 export default actions;
