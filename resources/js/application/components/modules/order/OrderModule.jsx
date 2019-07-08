@@ -23,6 +23,8 @@ const mapStateToProps = (state) => {
         data: state.orderData.orderData,
         clients: state.orderData.clients,
         managers: state.orderData.managers,
+        orderStates: state.orderData.orderStates,
+        orderSources: state.orderData.orderSources,
         aoi: state.orderData.aoi,
         scenes: state.orderData.scenes,
         distributors: state.orderData.distributors,
@@ -61,7 +63,16 @@ class OrderModule extends Component {
 
     _renderBody() {
 
-        const {data = {}, clients = [], managers = [], aoi = [], scenes = [], distributors = []} = this.props;
+        const {
+            data = {},
+            clients = [],
+            managers = [],
+            aoi = [],
+            scenes = [],
+            distributors = [],
+            orderStates = [],
+            orderSources = []
+        } = this.props;
 
         return (
             <div className="order">
@@ -74,6 +85,8 @@ class OrderModule extends Component {
                     clients={clients}
                     managers={managers}
                     aoi={aoi}
+                    orderStates={orderStates}
+                    orderSources={orderSources}
                 />
                 <Scenes scenes={scenes} />
                 <Distributors distributors={distributors} />

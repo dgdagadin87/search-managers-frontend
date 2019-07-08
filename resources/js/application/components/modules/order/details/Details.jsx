@@ -15,9 +15,45 @@ const { TextArea } = Input;
 
 class Details extends Component {
 
+    constructor(...props) {
+
+        super(...props);
+
+        const {data = {}} = props;
+
+        this.state = {
+            comment: data['comment']
+        };
+    }
+
+    _handleCommentInput(ev) {
+
+        let value = ev.currentTarget.value;
+
+        this.setState({ comment: value });
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+
+        const {data = {}} = nextProps;
+
+        this.setState({
+            data,
+            comment: data.comment || ''
+        });
+    }
+
     render() {
 
-        const {data = {}, clients = [], managers = [], aoi = []} = this.props;
+        const {
+            data = {},
+            clients = [],
+            managers = [],
+            aoi = [],
+            orderStates = [],
+            orderSources = []
+        } = this.props;
+        const {comment = ''} = this.state;
 
         return (
             <Fragment>
@@ -31,7 +67,14 @@ class Details extends Component {
                                     size="small"
                                     title="Детали заказа"
                                 >
-                                    <Form data={data} clients={clients} managers={managers} />
+                                    <Form
+                                        orderId={data['orderId']}
+                                        data={data}
+                                        clients={clients}
+                                        managers={managers}
+                                        orderStates={orderStates}
+                                        orderSources={orderSources}
+                                    />
                                 </Card>
                             </Col>
                             <Col span={14}>
@@ -41,7 +84,8 @@ class Details extends Component {
                                     title="Примечания"
                                 >
                                     <TextArea
-                                        value={data['note']}
+                                        onChange={this._handleCommentInput.bind(this)}
+                                        value={comment}
                                         placeholder="Введите примечание"
                                         className="custom"
                                         style={{ height: 150 }}

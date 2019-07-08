@@ -6,12 +6,79 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
+import locale from 'antd/lib/date-picker/locale/ru_RU';
 import DatePicker from 'antd/lib/date-picker';
 
 
 const Option = Select.Option;
 
 class Form extends Component {
+
+    constructor(props) {
+
+        super(props);
+
+        const {data = {}} = this.props;
+
+        this.state = {
+            theme: data['theme'],
+            contractNumber: data['contractNumber'],
+            accountNumber: data['accountNumber'],
+            valueAddedTax: data['valueAddedTax'],
+            contactAmount: data['contactAmount'],
+            createDate: this._formatDate(data['createDate']),
+            completeDate: this._formatDate(data['completeDate']),
+            contractDate: this._formatDate(data['contractDate']),
+            paymentDate: this._formatDate(data['paymentDate']),
+            actDate: this._formatDate(data['actDate'])
+        };
+    }
+
+    UNSAFE_componentWillReceiveProps(newProps) {
+
+        const {data = {}} = newProps;
+
+        this.setState({
+            theme: data['theme'],
+            contractNumber: data['contractNumber'],
+            accountNumber: data['accountNumber'],
+            valueAddedTax: data['valueAddedTax'],
+            contactAmount: data['contactAmount'],
+            createDate: this._formatDate(data['createDate']),
+            completeDate: this._formatDate(data['completeDate']),
+            contractDate: this._formatDate(data['contractDate']),
+            paymentDate: this._formatDate(data['paymentDate']),
+            actDate: this._formatDate(data['actDate'])
+        });
+    }
+
+    _formatDate(date) {
+
+        const dateFormat = 'DD.MM.YYYY';
+        let correctDate = !date ? {} : date;
+
+        if (!correctDate.hasOwnProperty('day')) {
+            return null;
+        }
+
+        const correctDay = correctDate['day'] < 10 ? String('0' + correctDate['day']) : String(correctDate['day']);
+        const correctMonth = correctDate['month'] < 10 ? String('0' + correctDate['month']) : String(correctDate['month']);
+        const correctYear = String(correctDate['year']);
+
+        return moment(correctDay + '.' + correctMonth + '.' + correctYear, dateFormat);
+    }
+
+    _onDateValueChange(fieldName, dateMoment) {
+
+        this.setState({ [fieldName]: dateMoment });
+    }
+
+    _onTextValueChange(e, fieldName) {
+
+        let value = e.target.value;
+
+        this.setState({ [fieldName]: value });
+    }
 
     _renderClientsSelect(){
 
@@ -20,7 +87,7 @@ class Form extends Component {
         const {strId: clientId = ''} = client;
 
         return (
-            <Select size="small" defaultValue={'client12'} style={{ width: 373 }}>
+            <Select size="small" value={clientId} style={{ width: 373 }}>
                 {clients.map(item => {
                     return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
                 })}
@@ -35,7 +102,7 @@ class Form extends Component {
         const {strId: managerId = ''} = manager;
 
         return (
-            <Select size="small" defaultValue={'manager22'} style={{ width: 373 }}>
+            <Select size="small" value={managerId} style={{ width: 373 }}>
                 {managers.map(item => {
                     return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
                 })}
@@ -45,14 +112,11 @@ class Form extends Component {
 
     _renderOrderStateSelect(){
 
-        const orderStates = [
-            {id: 1, strId: 'state1', name: 'Поступил'},
-            {id: 2, strId: 'state2', name: 'В работе'},
-            {id: 3, strId: 'state3', name: 'Закрыт'}
-        ];
+        const {data = {}, orderStates = []} = this.props;
+        const {stateId = ''} = data;
 
         return (
-            <Select size="small" defaultValue={'state1'} style={{ width: 373 }}>
+            <Select size="small" value={'str' + stateId} style={{ width: 373 }}>
                 {orderStates.map(item => {
                     return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
                 })}
@@ -62,14 +126,11 @@ class Form extends Component {
 
     _renderOrderSourceSelect(){
 
-        const orderSources = [
-            {id: 1, strId: 'source1', name: 'Свой архив'},
-            {id: 2, strId: 'source2', name: 'Чужой архив'},
-            {id: 3, strId: 'source3', name: 'Чужая съемка'}
-        ];
+        const {data = {}, orderSources = []} = this.props;
+        const {sourceId = ''} = data;
 
         return (
-            <Select size="small" defaultValue={'source1'} style={{ width: 373 }}>
+            <Select size="small" value={'str' + sourceId} style={{ width: 373 }}>
                 {orderSources.map(item => {
                     return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
                 })}
@@ -79,8 +140,20 @@ class Form extends Component {
 
     render() {
 
-        const dateFormat = 'YYYY/MM/DD';
+        const dateFormat = 'DD.MM.YYYY';
         const {data = {}} = this.props;
+        const {
+            theme = '',
+            contractNumber = '',
+            accountNumber = '',
+            valueAddedTax = '',
+            contactAmount = '',
+            createDate = null,
+            completeDate = null,
+            contractDate = null,
+            paymentDate = null,
+            actDate = null
+        } = this.state;
 
         return (
             <Fragment>
@@ -89,7 +162,11 @@ class Form extends Component {
                         Номер заказа
                     </Col>
                     <Col span={18}>
-                        <Input size="small" value={data['orderNumber']} />
+                        <Input
+                            disabled={true}
+                            size="small"
+                            value={data['orderNumber']}
+                        />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -126,10 +203,12 @@ class Form extends Component {
                     </Col>
                     <Col span={18}>
                         <DatePicker
-                             size="small"
-                            defaultValue={moment('2014/01/01', dateFormat)}
-                            format={dateFormat}
                             style={{ width: 373 }}
+                            locale={locale}
+                            size="small"
+                            value={createDate}
+                            format={dateFormat}
+                            onChange={(dateMoment) => this._onDateValueChange('createDate', dateMoment)}
                         />
                     </Col>
                 </Row>
@@ -139,10 +218,12 @@ class Form extends Component {
                     </Col>
                     <Col span={18}>
                         <DatePicker
-                            size="small"
-                            defaultValue={moment('2015/01/01', dateFormat)}
-                            format={dateFormat}
                             style={{ width: 373 }}
+                            locale={locale}
+                            size="small"
+                            value={completeDate}
+                            format={dateFormat}
+                            onChange={(dateMoment) => this._onDateValueChange('completeDate', dateMoment)}
                         />
                     </Col>
                 </Row>
@@ -151,7 +232,11 @@ class Form extends Component {
                         Тематика заказа
                     </Col>
                     <Col span={18}>
-                        <Input size="small" />
+                        <Input
+                            size="small"
+                            value={theme}
+                            onChange={(e) => this._onTextValueChange(e, 'theme')}
+                        />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -159,7 +244,11 @@ class Form extends Component {
                         Номер договора
                     </Col>
                     <Col span={18}>
-                        <Input size="small" value={data['contractNumber']} />
+                        <Input
+                            size="small"
+                            value={contractNumber}
+                            onChange={(e) => this._onTextValueChange(e, 'contractNumber')}
+                        />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -167,7 +256,14 @@ class Form extends Component {
                         Дата договора
                     </Col>
                     <Col span={18}>
-                        <Input size="small" />
+                        <DatePicker
+                            style={{ width: 373 }}
+                            locale={locale}
+                            size="small"
+                            value={contractDate}
+                            format={dateFormat}
+                            onChange={(dateMoment) => this._onDateValueChange('contractDate', dateMoment)}
+                        />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -175,7 +271,11 @@ class Form extends Component {
                         Номер счета
                     </Col>
                     <Col span={18}>
-                        <Input size="small" value={data['chetNumber']} />
+                    <Input
+                        size="small"
+                        value={accountNumber}
+                        onChange={(e) => this._onTextValueChange(e, 'accountNumber')}
+                    />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -184,10 +284,12 @@ class Form extends Component {
                     </Col>
                     <Col span={18}>
                         <DatePicker
-                            defaultValue={moment('2015/01/01', dateFormat)}
-                            format={dateFormat}
                             style={{ width: 373 }}
+                            locale={locale}
                             size="small"
+                            value={paymentDate}
+                            format={dateFormat}
+                            onChange={(dateMoment) => this._onDateValueChange('paymentDate', dateMoment)}
                         />
                     </Col>
                 </Row>
@@ -197,10 +299,12 @@ class Form extends Component {
                     </Col>
                     <Col span={18}>
                         <DatePicker
-                            defaultValue={moment('2015/01/01', dateFormat)}
-                            format={dateFormat}
                             style={{ width: 373 }}
+                            locale={locale}
                             size="small"
+                            value={actDate}
+                            format={dateFormat}
+                            onChange={(dateMoment) => this._onDateValueChange('actDate', dateMoment)}
                         />
                     </Col>
                 </Row>
@@ -209,7 +313,11 @@ class Form extends Component {
                         НДС %
                     </Col>
                     <Col span={18}>
-                        <Input size="small" value={data['nds']} />
+                        <Input
+                            size="small"
+                            value={valueAddedTax}
+                            onChange={(e) => this._onTextValueChange(e, 'valueAddedTax')}
+                        />
                     </Col>
                 </Row>
                 <Row style={{marginTop:'10px'}}>
@@ -217,7 +325,11 @@ class Form extends Component {
                         Сумма договора
                     </Col>
                     <Col span={18}>
-                        <Input size="small" value={data['sum']} />
+                        <Input
+                            size="small"
+                            value={contactAmount}
+                            onChange={(e) => this._onTextValueChange(e, 'contactAmount')}
+                        />
                     </Col>
                 </Row>
             </Fragment>

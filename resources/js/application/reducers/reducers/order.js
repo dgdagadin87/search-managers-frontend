@@ -6,7 +6,9 @@ const initialState = {
     isLoading: false,
     orderData: {},
     clients: [],
-    managers: []
+    managers: [],
+    orderStates: [],
+    orderSources: []
 };
 
 export default function (state = initialState, action) {
@@ -21,10 +23,22 @@ export default function (state = initialState, action) {
                 managers = [],
                 aoi = [],
                 scenes = [],
-                distributors = []
+                distributors = [],
+                orderStates = [],
+                orderSources = []
             } = action['payload'];
 
-            return { ...state, orderData, clients, managers, aoi, scenes, distributors };
+            return {
+                ...state,
+                orderData,
+                clients,
+                managers,
+                aoi,
+                scenes,
+                distributors,
+                orderStates,
+                orderSources
+            };
 
         case actions.ORDER_SET_LOADING:
             return { ...state, isLoading: action.payload };
