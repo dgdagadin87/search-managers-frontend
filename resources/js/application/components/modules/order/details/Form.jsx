@@ -5,9 +5,19 @@ import moment from 'moment';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Input from 'antd/lib/input';
+import Icon from 'antd/lib/icon';
 import Select from 'antd/lib/select';
-import locale from 'antd/lib/date-picker/locale/ru_RU';
-import DatePicker from 'antd/lib/date-picker';
+import Empty from 'antd/lib/empty';
+
+import DatePicker from '../../../parts/DatePicker';
+
+import Request from '../../../../../core/request';
+import {createUrl} from '../../../../../core/coreUtils';
+import {
+    defaultSettings,
+    urlSettings,
+    uiSettings
+} from '../../../../../config/settings';
 
 
 const Option = Select.Option;
@@ -21,6 +31,11 @@ class Form extends Component {
         const {data = {}} = this.props;
 
         this.state = {
+            clientsIsLoading: false,
+            clientsSource: [],
+
+            manager: data['manager'] || {},
+            client: data['client'] || {},
             theme: data['theme'],
             contractNumber: data['contractNumber'],
             accountNumber: data['accountNumber'],
@@ -39,6 +54,11 @@ class Form extends Component {
         const {data = {}} = newProps;
 
         this.setState({
+            clientsIsLoading: false,
+            clientsSource: [],
+
+            manager: data['manager'] || {},
+            client: data['client'] || {},
             theme: data['theme'],
             contractNumber: data['contractNumber'],
             accountNumber: data['accountNumber'],
@@ -73,6 +93,13 @@ class Form extends Component {
         this.setState({ [fieldName]: dateMoment });
     }
 
+    _onClientSelectChange(value, meta) {
+
+        const {props: { children: clientName = '' }} = meta;
+
+        this.setState({ client: { id: value, name: clientName } });
+    }
+
     _onTextValueChange(e, fieldName) {
 
         let value = e.target.value;
@@ -80,16 +107,63 @@ class Form extends Component {
         this.setState({ [fieldName]: value });
     }
 
+    _onClientSelectSearch(searchValue) {
+
+        if (!searchValue || String(searchValue).length < 3) {
+            return;
+        }
+
+        this.setState({
+            clientsIsLoading: true
+        }, () => {
+            Request.send({
+                url: createUrl(defaultSettings, urlSettings['autocompleteCustomers']),
+                data: { searchString: searchValue },
+            })
+            .then( (response) => {
+
+                const { collection = [] } = response;
+
+                this.setState({
+                    clientsSource: collection,
+                    clientsIsLoading: false
+                });
+            })
+            .catch((error) => {
+                this.setState({ clientsIsLoading: false });
+                console.log('error', error);
+            });
+        });
+    }
+
     _renderClientsSelect(){
 
-        const {data = {}, clients = []} = this.props;
-        const {client = {}} = data;
-        const {strId: clientId = ''} = client;
+        const {client = {}, clientsSource = [], clientsIsLoading = false} = this.state;
+        const clientName = client['name'] || '';
 
         return (
-            <Select size="small" value={clientId} style={{ width: 373 }}>
-                {clients.map(item => {
-                    return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
+            <Select
+                showSearch={true}
+                size={uiSettings['fieldSize']}
+                value={clientName}
+                style={{ width: uiSettings['formFieldWidth'] }}
+                defaultActiveFirstOption={false}
+                filterOption={false}
+                loading={clientsIsLoading}
+                suffixIcon={<Icon type="search" />}
+                notFoundContent={<Empty description="Начните вводить ФИО заказчика" />}
+                onChange={this._onClientSelectChange.bind(this)}
+                onSearch={this._onClientSelectSearch.bind(this)}
+            >
+                {clientsSource.map(item => {
+                    return (
+                        <Option
+                            key={item['id']}
+                            value={String(item['id'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
                 })}
             </Select>
         );
@@ -102,9 +176,20 @@ class Form extends Component {
         const {strId: managerId = ''} = manager;
 
         return (
-            <Select size="small" value={managerId} style={{ width: 373 }}>
+            <Select
+                size={uiSettings['fieldSize']}
+                value={managerId}
+                style={{ width: uiSettings['formFieldWidth'] }}
+            >
                 {managers.map(item => {
-                    return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
+                    return (
+                        <Option
+                            key={item['strId']}
+                            value={String(item['strId'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
                 })}
             </Select>
         );
@@ -116,9 +201,20 @@ class Form extends Component {
         const {stateId = ''} = data;
 
         return (
-            <Select size="small" value={'str' + stateId} style={{ width: 373 }}>
+            <Select
+                size={uiSettings['fieldSize']}
+                value={'str' + stateId}
+                style={{ width: uiSettings['formFieldWidth'] }}
+            >
                 {orderStates.map(item => {
-                    return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
+                    return (
+                        <Option
+                            key={item['strId']}
+                            value={String(item['strId'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
                 })}
             </Select>
         );
@@ -130,9 +226,20 @@ class Form extends Component {
         const {sourceId = ''} = data;
 
         return (
-            <Select size="small" value={'str' + sourceId} style={{ width: 373 }}>
+            <Select
+                size={uiSettings['fieldSize']}
+                value={'str' + sourceId}
+                style={{ width: uiSettings['formFieldWidth'] }}
+            >
                 {orderSources.map(item => {
-                    return <Option key={item['strId']} value={String(item['strId'])}>{item['name']}</Option>
+                    return (
+                        <Option
+                            key={item['strId']}
+                            value={String(item['strId'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
                 })}
             </Select>
         );
@@ -140,7 +247,6 @@ class Form extends Component {
 
     render() {
 
-        const dateFormat = 'DD.MM.YYYY';
         const {data = {}} = this.props;
         const {
             theme = '',
@@ -155,180 +261,185 @@ class Form extends Component {
             actDate = null
         } = this.state;
 
+        const isEmptyContractNumber = contractNumber === '' || contractNumber === null || contractNumber === false;
+
         return (
             <Fragment>
                 <Row>
-                    <Col style={{}} span={6}>
-                        Номер заказа
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Номер заказа</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <Input
                             disabled={true}
-                            size="small"
+                            size={uiSettings['fieldSize']}
                             value={data['orderNumber']}
+                            placeholder="Введите номер заказа"
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        ФИО Заказчика
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">ФИО Заказчика</span>&nbsp;
+                        <span className="strict">*</span>
                     </Col>
-                    <Col span={18}>{this._renderClientsSelect()}</Col>
+                    <Col span={17}>{this._renderClientsSelect()}</Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Менеджер
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Менеджер</span>&nbsp;
+                        <span className="strict">*</span>
                     </Col>
-                    <Col span={18}>{this._renderManagersSelect()}</Col>
+                    <Col span={17}>{this._renderManagersSelect()}</Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Статус
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Статус</span>&nbsp;
+                        <span className="strict">*</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         {this._renderOrderStateSelect()}
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Источник
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Источник</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         {this._renderOrderSourceSelect()}
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Дата поступления
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Дата поступления</span>&nbsp;
+                        <span className="strict">*</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <DatePicker
-                            style={{ width: 373 }}
-                            locale={locale}
-                            size="small"
+                            style={{ width: uiSettings['formFieldWidth'] }}
+                            size={uiSettings['fieldSize']}
                             value={createDate}
-                            format={dateFormat}
                             onChange={(dateMoment) => this._onDateValueChange('createDate', dateMoment)}
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Дата выполнения
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Дата выполнения</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <DatePicker
-                            style={{ width: 373 }}
-                            locale={locale}
-                            size="small"
+                            style={{ width: uiSettings['formFieldWidth'] }}
+                            size={uiSettings['fieldSize']}
                             value={completeDate}
-                            format={dateFormat}
                             onChange={(dateMoment) => this._onDateValueChange('completeDate', dateMoment)}
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Тематика заказа
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Тематика заказа</span>&nbsp;
+                        {isEmptyContractNumber ? null : <span className="strict">*</span>}
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <Input
-                            size="small"
+                            size={uiSettings['fieldSize']}
                             value={theme}
                             onChange={(e) => this._onTextValueChange(e, 'theme')}
+                            placeholder="Введите тематику заказа"
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Номер договора
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Номер договора</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <Input
-                            size="small"
+                            size={uiSettings['fieldSize']}
                             value={contractNumber}
                             onChange={(e) => this._onTextValueChange(e, 'contractNumber')}
+                            placeholder="Введите номер договора"
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Дата договора
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Дата договора</span>&nbsp;
+                        {isEmptyContractNumber ? null : <span className="strict">*</span>}
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <DatePicker
-                            style={{ width: 373 }}
-                            locale={locale}
-                            size="small"
+                            style={{ width: uiSettings['formFieldWidth'] }}
+                            size={uiSettings['fieldSize']}
                             value={contractDate}
-                            format={dateFormat}
                             onChange={(dateMoment) => this._onDateValueChange('contractDate', dateMoment)}
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Номер счета
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Номер счета</span>&nbsp;
+                        {isEmptyContractNumber ? null : <span className="strict">*</span>}
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                     <Input
-                        size="small"
+                        size={uiSettings['fieldSize']}
                         value={accountNumber}
                         onChange={(e) => this._onTextValueChange(e, 'accountNumber')}
+                        placeholder="Введите номер счета"
                     />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Дата оплаты
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Дата оплаты</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <DatePicker
-                            style={{ width: 373 }}
-                            locale={locale}
-                            size="small"
+                            style={{ width: uiSettings['formFieldWidth'] }}
+                            size={uiSettings['fieldSize']}
                             value={paymentDate}
-                            format={dateFormat}
                             onChange={(dateMoment) => this._onDateValueChange('paymentDate', dateMoment)}
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Дата акта
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Дата акта</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <DatePicker
-                            style={{ width: 373 }}
-                            locale={locale}
-                            size="small"
+                            style={{ width: uiSettings['formFieldWidth'] }}
+                            size={uiSettings['fieldSize']}
                             value={actDate}
-                            format={dateFormat}
                             onChange={(dateMoment) => this._onDateValueChange('actDate', dateMoment)}
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        НДС %
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">НДС %</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <Input
-                            size="small"
+                            size={uiSettings['fieldSize']}
                             value={valueAddedTax}
                             onChange={(e) => this._onTextValueChange(e, 'valueAddedTax')}
+                            placeholder="Введите НДС"
                         />
                     </Col>
                 </Row>
-                <Row style={{marginTop:'10px'}}>
-                    <Col style={{}} span={6}>
-                        Сумма договора
+                <Row style={uiSettings['labelStyle']}>
+                    <Col style={{paddingTop: '4px'}} span={7}>
+                        <span className="order-label">Сумма договора</span>
                     </Col>
-                    <Col span={18}>
+                    <Col span={17}>
                         <Input
-                            size="small"
+                            size={uiSettings['fieldSize']}
                             value={contactAmount}
                             onChange={(e) => this._onTextValueChange(e, 'contactAmount')}
+                            placeholder="Введите сумму договора"
                         />
                     </Col>
                 </Row>

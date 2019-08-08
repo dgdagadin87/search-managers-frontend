@@ -8,6 +8,8 @@ import Header from './parts/Header';
 import OrdersModule from './modules/orders/OrdersModule';
 import OrderModule from './modules/order/OrderModule';
 import CustomersModule from './modules/customers/CustomersModule';
+import CustomerModule from './modules/customer/CustomerModule';
+import AddCustomerModule from './modules/addCustomer/AddCustomerModule';
 
 
 const mapStateToProps = (state) => {
@@ -28,7 +30,13 @@ class AppContainer extends Component {
                     <Header user={userData} />
                     <div className="main-content">
                         <Switch>
-                            <Route path="/customers" render={ (props) => <CustomersModule {...props} /> } />
+                            <Route path="/customers">
+                                <Switch>
+                                    <Route path="/customers/addcustomer" render={ (props) => <AddCustomerModule {...props} /> } />
+                                    <Route exact path="/customers" render={ (props) => <CustomersModule {...props} /> } />
+                                </Switch>
+                            </Route>
+                            <Route path="/customer/:id" render={ (props) => <CustomerModule {...props} /> } />
                             <Route path="/orders/:id" render={ (props) => <OrderModule {...props} /> } />
                             <Route exact path="/" render={ (props) => <OrdersModule {...props} /> } />
                         </Switch>

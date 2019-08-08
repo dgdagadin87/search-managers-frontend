@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -18,6 +18,7 @@ import {
 import PageHeader from 'antd/lib/page-header';
 import Table from 'antd/lib/table';
 import Input from 'antd/lib/input';
+import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -169,7 +170,14 @@ class OrdersModule extends Component {
 
         return (
             <Row>
-                <Col span={18}>
+                <Col span={3}>
+                    <Button
+                        style={{width:'155px'}}
+                        type="primary"
+                        onClick={() => history.push('/customers/addcustomer')}
+                    >Добавить заказ</Button>
+                </Col>
+                <Col span={15}>
                     <Search
                         placeholder="Поиск заказов по названию, номеру договора, менеджеру, клиенту, организации"
                         enterButton={true}

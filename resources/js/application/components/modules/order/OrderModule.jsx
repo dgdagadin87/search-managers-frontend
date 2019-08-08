@@ -7,7 +7,11 @@ import {
     changeTitle
 } from '../../../actions/common';
 import {
-    asyncGetOrder
+    asyncGetOrder,
+    asyncGetDistributors,
+    asyncDeleteDistributor,
+    asyncGetAOI,
+    asyncDeleteAOI,
 } from '../../../actions/order';
 
 import Header from './header/Header';
@@ -25,17 +29,24 @@ const mapStateToProps = (state) => {
         managers: state.orderData.managers,
         orderStates: state.orderData.orderStates,
         orderSources: state.orderData.orderSources,
+        distribSources: state.orderData.distribSources,
         aoi: state.orderData.aoi,
         scenes: state.orderData.scenes,
         distributors: state.orderData.distributors,
         isLoading: state.orderData.isLoading,
+        isDistLoading: state.orderData.isDistLoading,
+        isAoiLoading: state.orderData.isAoiLoading
     };
 };
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeTitle,
-        asyncGetOrder
+        asyncGetOrder,
+        asyncGetDistributors,
+        asyncDeleteDistributor,
+        asyncGetAOI,
+        asyncDeleteAOI
     }, dispatch);
 }
 
@@ -71,8 +82,18 @@ class OrderModule extends Component {
             scenes = [],
             distributors = [],
             orderStates = [],
-            orderSources = []
+            orderSources = [],
+            distribSources = [],
+            asyncGetDistributors,
+            asyncDeleteDistributor,
+            asyncGetAOI,
+            asyncDeleteAOI,
+            isDistLoading,
+            isAoiLoading
         } = this.props;
+        const {match} = this.props;
+        const {params} = match;
+        const {id} = params;
 
         return (
             <div className="order">
@@ -85,11 +106,28 @@ class OrderModule extends Component {
                     clients={clients}
                     managers={managers}
                     aoi={aoi}
+                    orderId={id}
+                    isAoiLoading={isAoiLoading}
                     orderStates={orderStates}
                     orderSources={orderSources}
+                    asyncGetAOI={asyncGetAOI}
+                    asyncDeleteAOI={asyncDeleteAOI}
                 />
-                <Scenes scenes={scenes} />
-                <Distributors distributors={distributors} />
+                <Scenes
+                    orderId={id}
+                    scenes={scenes}
+                    isDistLoading={isDistLoading}
+                    asyncGetDistributors={asyncGetDistributors}
+                    asyncDeleteDistributor={asyncDeleteDistributor}
+                />
+                <Distributors
+                    orderId={id}
+                    isDistLoading={isDistLoading}
+                    distributors={distributors}
+                    distribSources={distribSources}
+                    asyncGetDistributors={asyncGetDistributors}
+                    asyncDeleteDistributor={asyncDeleteDistributor}
+                />
             </div>
         );
     }

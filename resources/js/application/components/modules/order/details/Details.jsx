@@ -26,6 +26,20 @@ class Details extends Component {
         };
     }
 
+    onDeleteClick(record) {
+
+        const {id} = record;
+        const { asyncDeleteAOI, orderId = null } = this.props;
+
+        if (!confirm('Вы действительно хотите удалить выбранную запись?')) {
+            return;
+        }
+
+        if (id) {
+            asyncDeleteAOI(id, orderId);
+        }
+    }
+
     _handleCommentInput(ev) {
 
         let value = ev.currentTarget.value;
@@ -50,8 +64,10 @@ class Details extends Component {
             clients = [],
             managers = [],
             aoi = [],
+            isAoiLoading = false,
             orderStates = [],
-            orderSources = []
+            orderSources = [],
+            asyncGetAOI
         } = this.props;
         const {comment = ''} = this.state;
 
@@ -79,7 +95,6 @@ class Details extends Component {
                             </Col>
                             <Col span={14}>
                                 <Card
-                                    style={{}}
                                     size="small"
                                     title="Примечания"
                                 >
@@ -88,10 +103,16 @@ class Details extends Component {
                                         value={comment}
                                         placeholder="Введите примечание"
                                         className="custom"
-                                        style={{ height: 150 }}
+                                        style={{ height: 190 }}
                                     />
                                 </Card>
-                                <Grid aoi={aoi} />
+                                <Grid
+                                    orderId={data['orderId']}
+                                    aoi={aoi}
+                                    isAoiLoading={isAoiLoading}
+                                    asyncGetAOI={asyncGetAOI}
+                                    onDeleteClick={this.onDeleteClick.bind(this)}
+                                />
                             </Col>
                         </Row>
                     </Panel>

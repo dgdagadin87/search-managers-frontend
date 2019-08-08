@@ -4,6 +4,12 @@ const defaultSettings = {
     'serverProtocol': 'https'
 };
 
+const uiSettings = {
+    fieldSize: 'default',
+    labelStyle: {marginTop:'5px'},
+    formFieldWidth: 352
+};
+
 const pageSettings = {
     'start' : 1,
     'end': 1,
@@ -14,7 +20,20 @@ const pageSettings = {
 const urlSettings = {
     'common': '/Home/Common',
     'orders': '/Home/Orders',
-    'order': '/Home/Order'
+    'order': '/Home/Order',
+    'addDistributor': '/Home/AddDistributor',
+    'editDistributor': '/Home/EditDistributor',
+    'getDistributors': '/Home/GetDistributors',
+    'deleteDistributor': '/Home/DeleteDistributor',
+    'getAOI': '/Home/GetAOI',
+    'addAOI': '/Home/AddAOI',
+    'editAOI': '/Home/EditAOI',
+    'deleteAOI': '/Home/DeleteAOI',
+    'customers': '/Home/Customers',
+    'customer': '/Home/Customer',
+    'addCustomer': '/Home/AddCustomer',
+    'editCustomer': '/Home/EditCustomer',
+    'autocompleteCustomers': '/Home/AutocompleteCustomers'
 };
 
-export {defaultSettings, pageSettings, urlSettings};
+export {defaultSettings, uiSettings, pageSettings, urlSettings};

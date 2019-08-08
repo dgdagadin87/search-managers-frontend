@@ -70,26 +70,58 @@ body {
 /*.order-list .ant-checkbox-inner {
     border: 1px solid #cccccc;
 }*/
-.order-list .ant-table {
+.order-list .ant-table, .order .ant-table {
     color: rgba(0, 0, 0, 0.8) !important;
 }
-.order-list /*.ant-table-bordered*/ .ant-table-body>table {
+.order-list /*.ant-table-bordered*/ .ant-table-body>table,
+.order /*.ant-table-bordered*/ .ant-table-body>table {
     border: 1px solid #cccccc !important;
 }
-.order-list .ant-table-title {
+.order-list .ant-table-title, .order .ant-table-title {
     border: 1px solid #cccccc !important;
 }
-.order-list .ant-table-bordered .ant-table-thead>tr>th, .order-list .ant-table-bordered .ant-table-tbody>tr>td {
+.order-list .ant-table-bordered .ant-table-thead>tr>th,
+.order-list .ant-table-bordered .ant-table-tbody>tr>td,
+.order .ant-table-bordered .ant-table-thead>tr>th,
+.order .ant-table-bordered .ant-table-tbody>tr>td {
     border-right: 1px solid #ccc;
 }
-.order-list .ant-table-thead>tr>th, .order-list .ant-table-tbody>tr>td {
+.order-list .ant-table-thead>tr>th,
+.order-list .ant-table-tbody>tr>td,
+.order .ant-table-thead>tr>th,
+.order .ant-table-tbody>tr>td
+{
     border-bottom: 1px solid #ccc;
 }
-.order-list .ant-input, .order .ant-input {
-    border-color: #ccc;
+
+.order .ant-table-scroll .ant-table-tbody>tr:first-child>td
+{
+    border-top-width: 0 !important;
 }
-.order-list .ant-input:hover, .order .ant-input:hover {
-    border-color: #1890FF;
+.order .ant-table-scroll .ant-table-tbody>tr:last-child>td
+{
+    border-bottom-width: 0  !important;
+}
+
+.order-list .ant-input,
+.order .ant-input,
+.order .ant-select-selection,
+.order .ant-calendar-picker {
+    border-color: #bbb !important;
+}
+.order-list .ant-input:hover, .order .ant-input:hover, .order .ant-select-selection:hover {
+    border-color: #1890FF !important;
+}
+
+.order .ant-calendar-picker-icon, .ant-select-arrow .ant-select-arrow-icon {
+    color: rgba(0,0,0,0.5) !important;
+}
+
+.order .ant-collapse, .order .ant-collapse-header, .order .ant-card-head {
+    border-color: #ccc !important;
+}
+.order .ant-card-bordered {
+    border-color: #ccc !important;
 }
 /*.order-list th {
     background: #fafafa !important;
@@ -101,8 +133,17 @@ body {
 .order-list .ant-tag {
     font-size: 11px;
     padding:0 3px;
-    border-color: #ccc;
+    border-color: #bbb;
     color: rgba(0,0,0,0.85);
+}
+
+.order .distributors .ant-table-thead th,
+.order .distributors .ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td {
+    padding: 9px 8px;
+}
+
+.order .distributors-button {
+    padding: 0 10px;
 }
 
 .main-footer {
@@ -120,6 +161,14 @@ body {
     margin: 20px 0;
 }
 
+.order .order-label {
+    color: #333;
+}
+
 .details-card .ant-card-body, .details-card .ant-card-head {
-    background: #fbfbfb;
+    /*background: #fbfbfb;*/
+}
+
+.strict {
+    color: red;
 }

@@ -27,3 +27,113 @@ export const asyncGetOrder = (orderId) => {
         });
     }
 };
+
+export const asyncGetDistributors = (orderId) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['DIST_SET_LOADING'], payload: true });
+        
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['getDistributors']),
+            data: { orderId }
+        })
+        .then( (data) => {
+
+            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
+            dispatch({ type: actions['DIST_SET_DATA'], payload: data });
+        })
+        .catch((error) => {
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
+export const asyncDeleteDistributor = (id, orderId) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['DIST_SET_LOADING'], payload: true });
+
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['deleteDistributor']),
+            data: { id }
+        })
+        .then( () => {
+
+            return Request.send({
+                url: createUrl(defaultSettings, urlSettings['getDistributors']),
+                data: { orderId }
+            })
+        })
+        .then( (data) => {
+
+            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
+            dispatch({ type: actions['DIST_SET_DATA'], payload: data });
+        })
+        .catch((error) => {
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
+export const asyncGetAOI = (orderId) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['AOI_SET_LOADING'], payload: true });
+        
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['getAOI']),
+            data: { orderId }
+        })
+        .then( (data) => {
+
+            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
+            dispatch({ type: actions['AOI_SET_DATA'], payload: data });
+        })
+        .catch((error) => {
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
+export const asyncDeleteAOI = (id, orderId) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['AOI_SET_LOADING'], payload: true });
+
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['deleteAOI']),
+            data: { id }
+        })
+        .then( () => {
+
+            return Request.send({
+                url: createUrl(defaultSettings, urlSettings['getAOI']),
+                data: { orderId }
+            })
+        })
+        .then( (data) => {
+
+            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
+            dispatch({ type: actions['AOI_SET_DATA'], payload: data });
+        })
+        .catch((error) => {
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
