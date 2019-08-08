@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 
-import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
+
+import Table from '../../../parts/Table';
 
 
 class ScenesGrid extends Component {
@@ -159,7 +160,6 @@ class ScenesGrid extends Component {
                     dataSource={scenes}
                     pagination={false}
                     title={() => this._renderAddButton()}
-                    //locale={{ emptyText: 'Нет данных для отображения' }}
                 />
             </div>
         );

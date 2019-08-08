@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Table from 'antd/lib/table';
-import Button from 'antd/lib/button';
-
 import Collapse from 'antd/lib/collapse';
 import Tag from 'antd/lib/tag';
+
+import Table from '../../../parts/Table';
+
 
 const Panel = Collapse.Panel;
 
@@ -143,7 +143,6 @@ class Grid extends Component {
                         columns={columns}
                         dataSource={collection}
                         pagination={false}
-                        //locale={{ emptyText: 'Нет данных для отображения' }}
                     />
                 </Panel>
             </Collapse>

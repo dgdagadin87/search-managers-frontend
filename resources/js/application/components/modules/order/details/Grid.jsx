@@ -1,10 +1,10 @@
 import React, {Component, Fragment} from 'react';
 
 import Card from 'antd/lib/card';
-import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
-import Empty from 'antd/lib/empty';
+
+import Table from '../../../parts/Table';
 
 import ModalForm from './ModalForm';
 
@@ -151,7 +151,6 @@ class Grid extends Component {
                             columns={columns}
                             dataSource={aoi}
                             pagination={false}
-                            locale={{ emptyText: <Empty description="Нет данных для отображения" /> }}
                             title={() => (<Button
                                 onClick={this._onAddHandler.bind(this)}
                                 type="primary"

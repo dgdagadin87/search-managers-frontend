@@ -14,12 +14,13 @@ import {
 } from '../../../actions/customers';
 
 import PageHeader from 'antd/lib/page-header';
-import Table from 'antd/lib/table';
 import Input from 'antd/lib/input';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
 import Spinner from '../../parts/Spinner';
+
+import Table from '../../parts/Table';
 
 
 const mapStateToProps = (state) => {
@@ -138,7 +139,12 @@ class CustomersModule extends Component {
                 sorter: true,
                 render: (text, record) => {
                     return (
-                        <Link title={text} to={'/customer/' + record['id']}>{text}</Link>
+                        <Link
+                            title={text}
+                            to={'/customer/' + record['id']}
+                        >
+                            {text}
+                        </Link>
                     );
                 }
             },

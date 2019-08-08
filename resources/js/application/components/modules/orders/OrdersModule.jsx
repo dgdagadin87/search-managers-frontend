@@ -16,13 +16,14 @@ import {
 } from '../../../actions/orders';
 
 import PageHeader from 'antd/lib/page-header';
-import Table from 'antd/lib/table';
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Tag from 'antd/lib/tag';
+
+import Table from '../../parts/Table';
 import Spinner from '../../parts/Spinner';
 
 
@@ -297,6 +298,7 @@ class OrdersModule extends Component {
 
         return (
             <Table
+                rowKey="key"
                 loading={isLoading}
                 columns={columns}
                 dataSource={correctData}
