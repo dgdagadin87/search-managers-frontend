@@ -213,6 +213,7 @@ class Distributors extends Component {
                             disabled={disabled}
                             value={account}
                             onChange={(e) => this._onTextValueChange(e, 'account')}
+                            placeholder="Введите аккаунт"
                         />
                     </Col>
                 </Row>
@@ -225,6 +226,7 @@ class Distributors extends Component {
                             disabled={disabled}
                             value={code}
                             onChange={(e) => this._onTextValueChange(e, 'code')}
+                            placeholder="Введите код съемки"
                         />
                     </Col>
                 </Row>
@@ -237,6 +239,7 @@ class Distributors extends Component {
                             disabled={disabled}
                             value={number}
                             onChange={(e) => this._onTextValueChange(e, 'number')}
+                            placeholder="Введите номер"
                         />
                     </Col>
                 </Row>
@@ -270,6 +273,7 @@ class Distributors extends Component {
                             disabled={disabled}
                             value={square}
                             onChange={(e) => this._onTextValueChange(e, 'square')}
+                            placeholder="Введите площадь"
                         />
                     </Col>
                 </Row>
@@ -282,6 +286,7 @@ class Distributors extends Component {
                             disabled={disabled}
                             value={price}
                             onChange={(e) => this._onTextValueChange(e, 'price')}
+                            placeholder="Введите стоимость"
                         />
                     </Col>
                 </Row>

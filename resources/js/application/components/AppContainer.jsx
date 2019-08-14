@@ -7,6 +7,7 @@ import Header from './parts/Header';
 
 import OrdersModule from './modules/orders/OrdersModule';
 import OrderModule from './modules/order/OrderModule';
+import AddOrderModule from './modules/addOrder/AddOrderModule';
 import CustomersModule from './modules/customers/CustomersModule';
 import CustomerModule from './modules/customer/CustomerModule';
 import AddCustomerModule from './modules/addCustomer/AddCustomerModule';
@@ -32,12 +33,18 @@ class AppContainer extends Component {
                         <Switch>
                             <Route path="/customers">
                                 <Switch>
+                                    <Route path="/customers/edit/:id" render={ (props) => <CustomerModule {...props} /> } />
                                     <Route path="/customers/addcustomer" render={ (props) => <AddCustomerModule {...props} /> } />
                                     <Route exact path="/customers" render={ (props) => <CustomersModule {...props} /> } />
                                 </Switch>
                             </Route>
-                            <Route path="/customer/:id" render={ (props) => <CustomerModule {...props} /> } />
-                            <Route path="/orders/:id" render={ (props) => <OrderModule {...props} /> } />
+                            <Route path="/orders">
+                                <Switch>
+                                    <Route path="/orders/edit/:id" render={ (props) => <OrderModule {...props} /> } />
+                                    <Route path="/orders/addorder" render={ (props) => <AddOrderModule {...props} /> } />
+                                    <Route exact path="/orders" render={ (props) => <OrdersModule {...props} /> } />
+                                </Switch>
+                            </Route>
                             <Route exact path="/" render={ (props) => <OrdersModule {...props} /> } />
                         </Switch>
                     </div>

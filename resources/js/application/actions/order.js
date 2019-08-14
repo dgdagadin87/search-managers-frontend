@@ -1,3 +1,5 @@
+import Message from 'antd/lib/message';
+
 import actions from '../../config/actions';
 import Request from '../../core/request';
 import {createUrl} from '../../core/coreUtils';
@@ -16,10 +18,51 @@ export const asyncGetOrder = (orderId) => {
         .then( (data) => {
 
             dispatch({ type: actions['ORDER_SET_LOADING'], payload: false });
-            dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Заказег Номер ' + orderId });
+            dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Заказ №' + orderId });
             dispatch({ type: actions['ORDER_SET_DATA'], payload: data});
         })
         .catch((error) => {
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
+export const asyncAddOrder = (dataToSend, history, showError) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['ADD_ORDER_SET_DISABLED'], payload: true });
+        dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Идёт добавление заказа...' });
+
+        Request.send({
+            type: 'post',
+            url: createUrl(defaultSettings, urlSettings['addOrder']),
+            data: dataToSend,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+        })
+        .then( (data) => {
+
+            const {isError = false, errorMessage = ''} = data;
+
+            dispatch({ type: actions['ADD_ORDER_SET_DISABLED'], payload: false });
+
+            if (isError) {
+                showError(errorMessage);
+                return;
+            }
+            
+            dispatch({ type: actions['ORDERS_SET_DEFAULT'], payload: null });
+            dispatch({ type: actions['ADD_ORDER_SET_DEFAULT'], payload: null });
+
+            Message.success('Заказ успешно добавлен', 3);
+
+            history.push('/');
+        })
+        .catch((error) => {
+            dispatch({ type: actions['ADD_ORDER_SET_DISABLED'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -44,6 +87,7 @@ export const asyncGetDistributors = (orderId) => {
             dispatch({ type: actions['DIST_SET_DATA'], payload: data });
         })
         .catch((error) => {
+            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -75,6 +119,7 @@ export const asyncDeleteDistributor = (id, orderId) => {
             dispatch({ type: actions['DIST_SET_DATA'], payload: data });
         })
         .catch((error) => {
+            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -99,6 +144,7 @@ export const asyncGetAOI = (orderId) => {
             dispatch({ type: actions['AOI_SET_DATA'], payload: data });
         })
         .catch((error) => {
+            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -130,10 +176,18 @@ export const asyncDeleteAOI = (id, orderId) => {
             dispatch({ type: actions['AOI_SET_DATA'], payload: data });
         })
         .catch((error) => {
+            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
             alert(errorMessage);
         });
+    }
+};
+
+export const setAddOrderData = (data) => {
+    return {
+        type: actions.ADD_ORDER_SET_DATA,
+        payload: data
     }
 };

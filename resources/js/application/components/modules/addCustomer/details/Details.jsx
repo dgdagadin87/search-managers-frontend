@@ -14,53 +14,18 @@ const { TextArea } = Input;
 
 class Details extends Component {
 
-    constructor(...props) {
-
-        super(...props);
-
-        const {customerData: data = {}} = this.props;
-
-        this.state = {
-            remarks: data['remarks'],
-            requisites: data['requisites']
-        };
-    }
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-
-        const {customerData: data = {}} = newProps;
-
-        this.setState({
-            remarks: data['remarks'],
-            requisites: data['requisites']
-        });
-    }
-
     _onTextValueChange(e, fieldName) {
 
-        let value = e.target.value;
-
-        this.setState({ [fieldName]: value }, () => this._onSetStateChange());
-    }
-
-    _onSetStateChange() {
-
         const {onChangeState} = this.props;
+        const value = e.target.value;
 
-        onChangeState(this.state);
-    }
-
-    _handleCommentInput(ev) {
-
-        let value = ev.currentTarget.value;
-
-        this.setState({ comment: value });
+        onChangeState({ [fieldName]: value });
     }
 
     render() {
 
         const {customerData = {}, orgTypes = [], disabled = false} = this.props;
-        const {requisites = '', remarks = ''} = this.state;
+        const {requisites = '', remarks = ''} = customerData;
 
         return (
             <Fragment>

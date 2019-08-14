@@ -44,7 +44,7 @@ const columns = [
         render: (text, record) => {
             const substredText = text.length > 33 ? text.substr(0, 33) + '..' : text;
             return (
-                <Link title={text} to={'/orders/' + record['number']}>{substredText}</Link>
+                <Link title={text} to={'/orders/edit/' + record['number']}>{substredText}</Link>
             );
         }
     },

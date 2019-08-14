@@ -12,48 +12,25 @@ const Option = Select.Option;
 
 class Form extends Component {
 
-    constructor(props) {
-
-        super(props);
-
-        this.state = {
-            name: '',
-            address: '',
-            agent: '',
-            email: '',
-            email2: '',
-            fax: '',
-            phone: '',
-            mobilePhone: '',
-            position: '',
-            homePage: '',
-            orgType: '48'
-        };
-    }
-
-    _onSetStateChange() {
-
-        const {onChangeState} = this.props;
-
-        onChangeState(this.state);
-    }
-
     _onSelectChange(orgType) {
 
-        this.setState({ orgType }, () => this._onSetStateChange());
+        const {onChangeState} = this.props;
+        
+        onChangeState({ orgType });
     }
 
     _onTextValueChange(e, fieldName) {
 
-        let value = e.target.value;
+        const {onChangeState} = this.props;
+        const value = e.target.value;
 
-        this.setState({ [fieldName]: value }, () => this._onSetStateChange());
+        onChangeState({ [fieldName]: value });
     }
 
     _renderOrgTypeSelect(){
 
-        const {orgTypes = [], disabled = false} = this.props;
-        const {orgType = ''} = this.state;
+        const {orgTypes = [], disabled = false, customerData = {}} = this.props;
+        const {orgType = ''} = customerData;
 
         return (
             <Select
@@ -64,7 +41,14 @@ class Form extends Component {
                 onChange={this._onSelectChange.bind(this)}
             >
                 {orgTypes.map(item => {
-                    return <Option key={item['id']} value={String(item['id'])}>{item['name']}</Option>
+                    return (
+                        <Option
+                            key={item['id']}
+                            value={String(item['id'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
                 })}
             </Select>
         );
@@ -72,7 +56,7 @@ class Form extends Component {
 
     render() {
 
-        const {disabled = false} = this.props;
+        const {disabled = false, customerData = {}} = this.props;
         const {
             name = '',
             address = '',
@@ -84,7 +68,7 @@ class Form extends Component {
             email = '',
             email2 = '',
             homePage = ''
-        } = this.state;
+        } = customerData;
 
         return (
             <Fragment>

@@ -141,7 +141,7 @@ class CustomersModule extends Component {
                     return (
                         <Link
                             title={text}
-                            to={'/customer/' + record['id']}
+                            to={'/customers/edit/' + record['id']}
                         >
                             {text}
                         </Link>

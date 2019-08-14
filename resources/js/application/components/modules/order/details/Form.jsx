@@ -249,6 +249,7 @@ class Form extends Component {
 
         const {data = {}} = this.props;
         const {
+            name = '',
             theme = '',
             contractNumber = '',
             accountNumber = '',
@@ -267,14 +268,13 @@ class Form extends Component {
             <Fragment>
                 <Row>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Номер заказа</span>
+                        <span className="order-label">Название заказа</span>
                     </Col>
                     <Col span={17}>
                         <Input
                             disabled={true}
                             size={uiSettings['fieldSize']}
-                            value={data['orderNumber']}
-                            placeholder="Введите номер заказа"
+                            value={data['name']}
                         />
                     </Col>
                 </Row>

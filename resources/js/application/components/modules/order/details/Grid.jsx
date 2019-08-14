@@ -125,13 +125,14 @@ class Grid extends Component {
             }
         ];
 
-        const {aoi = [], orderId = null, isAoiLoading = false} = this.props;
+        const {aoi = [], orderId = null, isAoiLoading = false, clientId = null} = this.props;
         const {formData = emptyFormData, visible = false, isLoading = false} = this.state;
 
         return (
             <Fragment>
                 <ModalForm
                     orderId={orderId}
+                    clientId={clientId}
                     formData={formData}
                     visible={visible}
                     isLoading={isLoading}

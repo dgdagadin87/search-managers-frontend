@@ -119,7 +119,15 @@ class OrdersModule extends Component {
 
     _onSearch(){
 
-        const { page, sortBy, sortType, searchString, onlyMy, onlyActive, asyncGetOrders } = this.props;
+        const {
+            page,
+            sortBy,
+            sortType,
+            searchString,
+            onlyMy,
+            onlyActive,
+            asyncGetOrders
+        } = this.props;
 
         asyncGetOrders(
             {sortBy, sortType},
@@ -130,7 +138,15 @@ class OrdersModule extends Component {
 
     _onMyChange(ev){
 
-        const { page, sortBy, sortType, searchString, onlyActive, asyncGetOrders, changeOnlyMy } = this.props;
+        const {
+            page,
+            sortBy,
+            sortType,
+            searchString,
+            onlyActive,
+            asyncGetOrders,
+            changeOnlyMy
+        } = this.props;
         const onlyMy = ev.target.checked;
 
         changeOnlyMy(onlyMy);
@@ -144,7 +160,15 @@ class OrdersModule extends Component {
 
     _onActiveChange(ev){
 
-        const { page, sortBy, sortType, searchString, onlyMy, asyncGetOrders, changeOnlyActive } = this.props;
+        const {
+            page,
+            sortBy,
+            sortType,
+            searchString,
+            onlyMy,
+            asyncGetOrders,
+            changeOnlyActive
+        } = this.props;
         const onlyActive = ev.target.checked;
 
         changeOnlyActive(onlyActive);
@@ -167,7 +191,12 @@ class OrdersModule extends Component {
     _renderTableFilter() {
 
         const Search = Input.Search;
-        const {searchString = '', onlyActive = false, onlyMy = false} = this.props;
+        const {
+            searchString = '',
+            onlyActive = false,
+            onlyMy = false,
+            history
+        } = this.props;
 
         return (
             <Row>
@@ -175,7 +204,7 @@ class OrdersModule extends Component {
                     <Button
                         style={{width:'155px'}}
                         type="primary"
-                        onClick={() => history.push('/customers/addcustomer')}
+                        onClick={() => history.push('/orders/addorder')}
                     >Добавить заказ</Button>
                 </Col>
                 <Col span={15}>
@@ -190,8 +219,14 @@ class OrdersModule extends Component {
                     />
                 </Col>
                 <Col span={6} style={{textAlign:'right', paddingTop:'5px'}}>
-                    <Checkbox onChange={this._onMyChange.bind(this)} checked={onlyMy}>Мои заказы</Checkbox>
-                    <Checkbox onChange={this._onActiveChange.bind(this)} checked={onlyActive}>Активные</Checkbox>
+                    <Checkbox
+                        onChange={this._onMyChange.bind(this)}
+                        checked={onlyMy}
+                    >Мои заказы</Checkbox>
+                    <Checkbox
+                        onChange={this._onActiveChange.bind(this)}
+                        checked={onlyActive}
+                    >Активные</Checkbox>
                 </Col>
             </Row>
         );
@@ -209,7 +244,12 @@ class OrdersModule extends Component {
                 render: (text, record) => {
                     const substredText = text.length > 33 ? text.substr(0, 33) + '..' : text;
                     return (
-                        <Link title={text} to={'/orders/' + record['number']}>{substredText}</Link>
+                        <Link
+                            title={text}
+                            to={'/orders/edit/' + record['number']}
+                        >
+                            {substredText}
+                        </Link>
                     );
                 }
             },
@@ -258,7 +298,13 @@ class OrdersModule extends Component {
                 render: (stateId) => {
                     const currentState = this._stateColors[stateId] || {};
                     const {color = '', name = '', short = false} = currentState;
-                    return <Tag title={name} style={{textTransform: 'uppercase', background:color}}>{short ? short : name}</Tag>;
+                    return (
+                        <Tag
+                            title={name}
+                            style={{textTransform: 'uppercase', background:color}}
+                        >
+                            {short ? short : name}
+                        </Tag>);
                 },
                 sorter: true
             },
@@ -271,7 +317,14 @@ class OrdersModule extends Component {
                 render: (source) => {
                     const {name = '', id = '0'} = source;
                     const currentBackground = this._sourceColors[id];
-                    return <Tag title={name} style={{textTransform: 'uppercase', background:currentBackground}}>{name}</Tag>;
+                    return (
+                        <Tag
+                            title={name}
+                            style={{textTransform: 'uppercase', background:currentBackground}}
+                        >
+                            {name}
+                        </Tag>
+                    );
                 },
                 sorter: true
             },

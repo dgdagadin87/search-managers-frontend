@@ -19,14 +19,15 @@ export const asyncGetCustomer = (customerId) => {
         })
         .then( (data) => {
 
-            const { collection = [], customerData = {}, orgTypes = [] } = data;
+            const { collection = [], customerData = {} } = data;
             const {name = ''} = customerData;
 
             dispatch({ type: actions['CUSTOMER_SET_LOADING'], payload: false });
             dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Заказчик ' + name });
-            dispatch({ type: actions['CUSTOMER_SET_DATA'], payload: { collection, customerData, orgTypes }});
+            dispatch({ type: actions['CUSTOMER_SET_ALL_DATA'], payload: { collection, customerData }});
         })
         .catch((error) => {
+            dispatch({ type: actions['CUSTOMER_SET_LOADING'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -39,9 +40,8 @@ export const asyncSaveCustomer = (dataToSend) => {
 
     return dispatch => {
 
+        dispatch({ type: actions['CUSTOMER_SET_DATA'], payload: { customerData: dataToSend } });
         dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: true });
-
-        const hide = Message.loading('Подождите', 0);
 
         Request.send({
             type: 'post',
@@ -59,7 +59,7 @@ export const asyncSaveCustomer = (dataToSend) => {
             Message.success('Пользователь успешно сохранен', 3);
         })
         .catch((error) => {
-            hide();
+            dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
@@ -83,18 +83,33 @@ export const asyncAddCustomer = (dataToSend, history) => {
         .then( () => {
 
             dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
-            dispatch({ type: actions['CUSTOMERS_SET_DEFAULT'], payload: false });
+            dispatch({ type: actions['CUSTOMERS_SET_DEFAULT'], payload: null });
+            dispatch({ type: actions['ADD_CUSTOMER_SET_DEFAULT'], payload: null });
 
             Message.success('Пользователь успешно добавлен', 3);
 
             history.push('/customers');
         })
         .catch((error) => {
-            hide();
+            dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;
             alert(errorMessage);
         });
+    }
+};
+
+export const setEditCustomerData = (data) => {
+    return {
+        type: actions.CUSTOMER_SET_DATA,
+        payload: data
+    }
+};
+
+export const setAddCustomerData = (data) => {
+    return {
+        type: actions.ADD_CUSTOMER_SET_DATA,
+        payload: data
     }
 };

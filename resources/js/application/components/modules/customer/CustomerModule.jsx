@@ -8,13 +8,12 @@ import {
 } from '../../../actions/common';
 import {
     asyncGetCustomer,
-    asyncSaveCustomer
+    asyncSaveCustomer,
+    setEditCustomerData
 } from '../../../actions/customer';
 
-import Message from 'antd/lib/message';
-
-import Header from './header/Header';
-import Details from './details/Details';
+import Header from '../addCustomer/header/Header';
+import Details from '../addCustomer/details/Details';
 import Grid from './grid/Grid';
 
 import Spinner from '../../parts/Spinner';
@@ -26,7 +25,7 @@ const mapStateToProps = (state) => {
         isLoading: state.customerData.isLoading,
         collection: state.customerData.collection,
         customerData: state.customerData.customerData,
-        orgTypes: state.customerData.orgTypes
+        orgTypes: state.commonData.orgTypes
     };
 };
 
@@ -34,34 +33,13 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeTitle,
         asyncGetCustomer,
-        asyncSaveCustomer
+        asyncSaveCustomer,
+        setEditCustomerData
     }, dispatch);
 }
 
 
 class CustomerModule extends Component {
-
-    constructor(...props){
-
-        super(...props);
-
-        this._customerData = props['customerData'] || {};
-    }
-
-    _showWarningMessage () {
-
-        Message.error('Заполните поле "ФИО Заказчика"');
-    };
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-
-        const {customerData = {}} = newProps;
-
-        if (customerData.hasOwnProperty('id')) {
-
-            this._customerData = customerData;
-        }
-    }
 
     componentDidMount() {
 
@@ -74,22 +52,17 @@ class CustomerModule extends Component {
 
     _onSaveHandler() {
 
-        const customerData = this._customerData || {};
-
-        if (!customerData['name']) {
-
-            this._showWarningMessage();
-            return;
-        }
+        const {customerData = {}} = this.props;
 
         this.props.asyncSaveCustomer(customerData);
     }
 
     _onChangeDataHandler(data) {
 
-        const currentCustomerData = this._customerData || {};
+        const { setEditCustomerData, customerData = {} } = this.props;
+        const correctCustomerData = { ...customerData, ...data }
 
-        this._customerData = { ...currentCustomerData, ...data };
+        setEditCustomerData(correctCustomerData);
     }
 
     _renderBody() {

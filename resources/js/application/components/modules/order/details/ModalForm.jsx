@@ -60,8 +60,7 @@ class AoiForm extends Component {
     _onSave () {
 
         const {onSaveClick} = this.props;
-
-        const {orderId = null} = this.props;
+        const {orderId = null, clientId = null} = this.props;
         const { fileName = '', currentFile = null, region = '', id = false } = this.state;
         const formData = new FormData();
 
@@ -72,6 +71,7 @@ class AoiForm extends Component {
         formData.append('fileName', fileName);
         formData.append('region', region);
         formData.append('orderId', orderId);
+        formData.append('clientId', clientId);
 
         if (id !== false) {
             formData.append('aoiId', id);

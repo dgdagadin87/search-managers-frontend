@@ -69,6 +69,8 @@ class Details extends Component {
             orderSources = [],
             asyncGetAOI
         } = this.props;
+        const {client = {}} = data;
+        const {id: clientId = null} = client;
         const {comment = ''} = this.state;
 
         return (
@@ -108,6 +110,7 @@ class Details extends Component {
                                 </Card>
                                 <Grid
                                     orderId={data['orderId']}
+                                    clientId={clientId}
                                     aoi={aoi}
                                     isAoiLoading={isAoiLoading}
                                     asyncGetAOI={asyncGetAOI}

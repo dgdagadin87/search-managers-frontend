@@ -34,6 +34,9 @@ export default function (state = initialState, action) {
         case actions.ORDERS_SET_LOADING:
             return { ...state, isLoading: action.payload };
 
+        case actions.ORDERS_SET_DEFAULT:
+            return { ...initialState };
+
         default:
             return state;
 

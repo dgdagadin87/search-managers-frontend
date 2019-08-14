@@ -7,10 +7,9 @@ import {
     changeTitle
 } from '../../../actions/common';
 import {
-    asyncAddCustomer
+    asyncAddCustomer,
+    setAddCustomerData
 } from '../../../actions/customer';
-
-import Message from 'antd/lib/message';
 
 import Header from './header/Header';
 import Details from './details/Details';
@@ -18,7 +17,8 @@ import Details from './details/Details';
 
 const mapStateToProps = (state) => {
     return {
-        disabled: state.customerData.disabled,
+        customerData: state.addCustomerData.customerData,
+        disabled: state.addCustomerData.disabled,
         orgTypes: state.commonData.orgTypes
     };
 };
@@ -26,24 +26,18 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeTitle,
+        setAddCustomerData,
         asyncAddCustomer
     }, dispatch);
 }
 
 
-class CustomerModule extends Component {
+class AddCustomerModule extends Component {
 
     constructor(...props){
 
         super(...props);
-
-        this._customerData = {};
     }
-
-    _showWarningMessage () {
-
-        Message.error('Заполните поле "ФИО Заказчика"');
-    };
 
     componentDidMount() {
 
@@ -54,38 +48,34 @@ class CustomerModule extends Component {
 
     _onSaveHandler() {
 
-        const {history} = this.props;
-        const customerData = this._customerData || {};
-
-        if (!customerData['name']) {
-
-            this._showWarningMessage();
-            return;
-        }
+        const {history, customerData = {}} = this.props;
 
         this.props.asyncAddCustomer(customerData, history);
     }
 
     _onChangeDataHandler(data) {
 
-        const currentCustomerData = this._customerData || {};
+        const { setAddCustomerData, customerData = {} } = this.props;
+        const correctCustomerData = { ...customerData, ...data }
 
-        this._customerData = { ...currentCustomerData, ...data };
+        setAddCustomerData(correctCustomerData);
     }
 
     _renderBody() {
 
-        const {orgTypes = [], disabled = false} = this.props;
+        const {orgTypes = [], disabled = false, customerData = {}} = this.props;
 
         return (
             <div className="order">
                 <Header
                     disabled={disabled}
+                    customerData={customerData}
                     saveHandler={this._onSaveHandler.bind(this)}
                 />
                 <Details
                     disabled={disabled}
                     orgTypes={orgTypes}
+                    customerData={customerData}
                     onChangeState={this._onChangeDataHandler.bind(this)}
                 />
             </div>
@@ -99,4 +89,4 @@ class CustomerModule extends Component {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerModule);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerModule);

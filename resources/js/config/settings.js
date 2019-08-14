@@ -21,6 +21,7 @@ const urlSettings = {
     'common': '/Home/Common',
     'orders': '/Home/Orders',
     'order': '/Home/Order',
+    'addOrder': '/api/orders/add',
     'addDistributor': '/Home/AddDistributor',
     'editDistributor': '/Home/EditDistributor',
     'getDistributors': '/Home/GetDistributors',
