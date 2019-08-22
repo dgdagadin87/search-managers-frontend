@@ -19,9 +19,10 @@ const pageSettings = {
 
 const urlSettings = {
     'common': '/Home/Common',
-    'orders': '/Home/Orders',
+    'orders': '/api/orders/list',
     'order': '/Home/Order',
     'addOrder': '/api/orders/add',
+    'editOrder': '/api/orders/edit',
     'addDistributor': '/Home/AddDistributor',
     'editDistributor': '/Home/EditDistributor',
     'getDistributors': '/Home/GetDistributors',

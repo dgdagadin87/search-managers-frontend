@@ -4,7 +4,11 @@ import actions from '../../../config/actions';
 const initialState = {
     collection: false,
     searchString: '',
-    onlyMy: false,
+    stateId: undefined,
+    sourceId: undefined,
+    managerId: undefined,
+    dateFrom: null,
+    dateTo: null,
     onlyActive: false,
     page: 1,
     pages: 1,
@@ -25,11 +29,17 @@ export default function (state = initialState, action) {
         case actions.ORDERS_SET_SEARCH:
             return { ...state, searchString: action.payload };
 
-        case actions.ORDERS_SET_ONLY_MY:
-            return { ...state, onlyMy: action.payload };
-
         case actions.ORDERS_SET_ONLY_ACTIVE:
             return { ...state, onlyActive: action.payload };
+
+        case actions.ORDERS_SET_STATE_ID:
+            return { ...state, stateId: action.payload };
+
+        case actions.ORDERS_SET_SOURCE_ID:
+            return { ...state, sourceId: action.payload };
+
+        case actions.ORDERS_SET_MANAGER_ID:
+            return { ...state, managerId: action.payload };
 
         case actions.ORDERS_SET_LOADING:
             return { ...state, isLoading: action.payload };

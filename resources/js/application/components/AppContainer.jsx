@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import Header from './parts/Header';
 
 import OrdersModule from './modules/orders/OrdersModule';
-import OrderModule from './modules/order/OrderModule';
+import OrderModule from './modules/editOrder/OrderModule';
 import AddOrderModule from './modules/addOrder/AddOrderModule';
 import CustomersModule from './modules/customers/CustomersModule';
 import CustomerModule from './modules/customer/CustomerModule';

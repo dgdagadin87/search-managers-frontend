@@ -1,18 +1,36 @@
 import actions from '../../../config/actions';
+import { formatRawDate } from '../../../core/coreUtils';
 
+
+const correctCreateDate = formatRawDate(new Date());
 
 const initialState = {
-
+    disabled: false,
     isLoading: false,
     isDistLoading: false,
-    isAoiLoading: false,
-    orderData: {},
-    aoi: [],
-    clients: [],
-    managers: [],
-    orderStates: [],
-    orderSources: [],
-    distribSources: []
+    //isAoiLoading: false,
+    orderData: {
+        id: null,
+        name: '',
+        comment: '',
+        manager: undefined,
+        state: undefined,
+        source: undefined,
+        client: {},
+        theme: '',
+        contractNumber: '',
+        accountNumber: '',
+        valueAddedTax: null,
+        contactAmount: null,
+        createDate: correctCreateDate,
+        completeDate: null,
+        contractDate: null,
+        paymentDate: null,
+        actDate: null
+    },
+    //aoi: [],
+    scenes : [],
+    distributors : []
 };
 
 export default function (state = initialState, action) {
@@ -23,31 +41,27 @@ export default function (state = initialState, action) {
 
             const {
                 orderData = {},
-                clients = [],
-                managers = [],
-                aoi = [],
+                //aoi = [],
                 scenes = [],
-                distributors = [],
-                orderStates = [],
-                orderSources = [],
-                distribSources = []
+                distributors = []
             } = action['payload'];
 
             return {
                 ...state,
                 orderData,
-                clients,
-                managers,
-                aoi,
+                //aoi,
                 scenes,
-                distributors,
-                orderStates,
-                orderSources,
-                distribSources
+                distributors
             };
+
+        case actions.ORDER_SET_FORM_DATA:
+            return { ...state, orderData: { ...state.orderData, ...action.payload} };
 
         case actions.ORDER_SET_LOADING:
             return { ...state, isLoading: action.payload };
+
+            case actions.ORDER_SET_DISABLED:
+                    return { ...state, disabled: action.payload };
 
         case actions.DIST_SET_LOADING:
             return { ...state, isDistLoading: action.payload };

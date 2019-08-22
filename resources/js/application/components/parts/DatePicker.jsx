@@ -16,9 +16,16 @@ export default class Picker extends Component {
             style = {},
             value = null,
             format = null,
-            onChange
+            onChange,
+            placeholder = undefined
         } = this.props;
         const correctFormat = format || dateFormat;
+
+        let otherProps = {};
+
+        if (placeholder) {
+            otherProps['placeholder'] = placeholder;
+        }
 
         return (
             <DatePicker
@@ -29,6 +36,7 @@ export default class Picker extends Component {
                 value={value}
                 format={correctFormat}
                 onChange={onChange}
+                { ...otherProps }
             />
         );
     }

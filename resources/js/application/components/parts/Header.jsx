@@ -102,23 +102,23 @@ class Header extends Component {
                     mode="horizontal"
                 >
                     <Menu.Item key="orders">
-                        <Icon type="file-text" style={{color:'rgba(0, 0, 0, 0.65)'}} />
+                        <Icon type="file-text" style={{/*color:'rgba(0, 0, 0, 0.65)'*/}} />
                         <span>Заказы</span>
                         <Link to="/" />
                     </Menu.Item>
                     <Menu.Item key="customers">
-                        <Icon type="usergroup-add" style={{color:'rgba(0, 0, 0, 0.65)'}} />
+                        <Icon type="usergroup-add" style={{/*color:'rgba(0, 0, 0, 0.65)'*/}} />
                         <span>Заказчики</span>
                         <Link to="/customers" />
                     </Menu.Item>
-                    <Menu.Item key="layers" disabled={true}>
-                        <Icon type="switcher" style={{color:'rgba(0, 0, 0, 0.65)'}} />Покрытия
+                    <Menu.Item key="layers">
+                        <Icon type="switcher" style={{/*color:'rgba(0, 0, 0, 0.65)'*/}} />Покрытия
                     </Menu.Item>
-                    <Menu.Item key="reports" disabled={true}>
-                        <Icon type="fund" style={{color:'rgba(0, 0, 0, 0.65)'}} />Отчеты
+                    <Menu.Item key="reports">
+                        <Icon type="fund" style={{/*color:'rgba(0, 0, 0, 0.65)'*/}} />Отчеты
                     </Menu.Item>
-                    <Menu.Item key="links" disabled={true}>
-                        <Icon type="link" style={{color:'rgba(0, 0, 0, 0.65)'}} />Ссылки
+                    <Menu.Item key="links">
+                        <Icon type="link" style={{/*color:'rgba(0, 0, 0, 0.65)'*/}} />Ссылки
                     </Menu.Item>
                     <Menu.Item
                         key="user"

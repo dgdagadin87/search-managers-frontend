@@ -7,7 +7,7 @@ html, body {
 }
 body {
     overflow-y: scroll;
-    border-color: #ccc !important;
+    /*border-color: #ccc !important;*/
 }
 
 .main-container {
@@ -38,7 +38,39 @@ body {
     padding: 0 17px;
     margin: 0 auto;
 }
-.main-header .ant-menu {
+
+.main-footer {
+    padding: 0 17px;
+    margin-top: 20px;
+    height: 40px;
+}
+
+.main-spinner {
+    text-align: center;
+    background: #ffffff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    margin: 20px 0;
+}
+
+.strict {
+    color: red;
+}
+
+.order-list .ant-tag {
+    font-size: 11px;
+    padding:0 3px;
+    border-color: #bbb;
+    color: rgba(0,0,0,0.85);
+}
+
+.order .order-label {
+    color: rgba(0,0,0,0.85);
+    font-size: 14px;
+}
+
+/*.main-header .ant-menu {
     color: rgba(0, 0, 0, 0.8) !important;
 }
 .main-header .ant-menu-horizontal {
@@ -67,14 +99,11 @@ body {
     color: rgba(0, 0, 0, 0.8) !important;
 }
 
-/*.order-list .ant-checkbox-inner {
-    border: 1px solid #cccccc;
-}*/
 .order-list .ant-table, .order .ant-table {
     color: rgba(0, 0, 0, 0.8) !important;
 }
-.order-list /*.ant-table-bordered*/ .ant-table-body>table,
-.order /*.ant-table-bordered*/ .ant-table-body>table {
+.order-list  .ant-table-body>table,
+.order  .ant-table-body>table {
     border: 1px solid #cccccc !important;
 }
 .order-list .ant-table-title, .order .ant-table-title {
@@ -123,18 +152,11 @@ body {
 .order .ant-card-bordered {
     border-color: #ccc !important;
 }
-/*.order-list th {
-    background: #fafafa !important;
-    padding: 9px 8px;
+.order-list th {
+    padding: 5px 8px;
 }
-.order-list .ant-table-middle>.ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td {
-    padding: 9px 8px;
-}*/
-.order-list .ant-tag {
-    font-size: 11px;
-    padding:0 3px;
-    border-color: #bbb;
-    color: rgba(0,0,0,0.85);
+.order-list .ant-table-content>.ant-table-body>table>.ant-table-tbody>tr>td {
+    padding: 5px 8px;
 }
 
 .order .distributors .ant-table-thead th,
@@ -145,30 +167,16 @@ body {
 .order .distributors-button {
     padding: 0 10px;
 }
-
-.main-footer {
-    padding: 0 17px;
-    margin-top: 20px;
-    height: 40px;
-}
-
-.main-spinner {
-    text-align: center;
-    background: #ffffff;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    padding: 30px 50px;
-    margin: 20px 0;
-}
-
 .order .order-label {
     color: #333;
-}
+}*/
 
-.details-card .ant-card-body, .details-card .ant-card-head {
-    /*background: #fbfbfb;*/
-}
+/* Inputs */
 
-.strict {
-    color: red;
+/*.custom-select .ant-select-selection {
+    color: rgba(0, 0, 0, 0.8) !important;
+    border-color: #bbb !important;
 }
+.custom-select .ant-select-selection:hover {
+    border-color: #1890FF !important;
+}*/

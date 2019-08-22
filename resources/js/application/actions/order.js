@@ -71,6 +71,44 @@ export const asyncAddOrder = (dataToSend, history, showError) => {
     }
 };
 
+export const asyncEditOrder = (dataToSend, showError) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['ORDER_SET_DISABLED'], payload: true });
+        dispatch({ type: actions['COMMON_SET_TITLE'], payload: 'Идёт редактирование заказа...' });
+
+        Request.send({
+            type: 'post',
+            url: createUrl(defaultSettings, urlSettings['editOrder']),
+            data: dataToSend,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+        })
+        .then( (data) => {
+
+            const {isError = false, errorMessage = ''} = data;
+
+            dispatch({ type: actions['ORDER_SET_DISABLED'], payload: false });
+
+            if (isError) {
+                showError(errorMessage);
+                return;
+            }
+
+            dispatch({ type: actions['ORDERS_SET_DEFAULT'], payload: null }); // TODO
+
+            Message.success('Заказ успешно отредактирован', 3);
+        })
+        .catch((error) => {
+            dispatch({ type: actions['ORDER_SET_DISABLED'], payload: false });
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
 export const asyncGetDistributors = (orderId) => {
 
     return dispatch => {
@@ -128,66 +166,16 @@ export const asyncDeleteDistributor = (id, orderId) => {
     }
 };
 
-export const asyncGetAOI = (orderId) => {
-
-    return dispatch => {
-
-        dispatch({ type: actions['AOI_SET_LOADING'], payload: true });
-        
-        Request.send({
-            url: createUrl(defaultSettings, urlSettings['getAOI']),
-            data: { orderId }
-        })
-        .then( (data) => {
-
-            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
-            dispatch({ type: actions['AOI_SET_DATA'], payload: data });
-        })
-        .catch((error) => {
-            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
-            console.log('error', error);
-            const {message, statusText} = error;
-            const errorMessage = statusText ? statusText : message;
-            alert(errorMessage);
-        });
-    }
-};
-
-export const asyncDeleteAOI = (id, orderId) => {
-
-    return dispatch => {
-
-        dispatch({ type: actions['AOI_SET_LOADING'], payload: true });
-
-        Request.send({
-            url: createUrl(defaultSettings, urlSettings['deleteAOI']),
-            data: { id }
-        })
-        .then( () => {
-
-            return Request.send({
-                url: createUrl(defaultSettings, urlSettings['getAOI']),
-                data: { orderId }
-            })
-        })
-        .then( (data) => {
-
-            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
-            dispatch({ type: actions['AOI_SET_DATA'], payload: data });
-        })
-        .catch((error) => {
-            dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
-            console.log('error', error);
-            const {message, statusText} = error;
-            const errorMessage = statusText ? statusText : message;
-            alert(errorMessage);
-        });
-    }
-};
-
 export const setAddOrderData = (data) => {
     return {
         type: actions.ADD_ORDER_SET_DATA,
+        payload: data
+    }
+};
+
+export const setEditOrderData = (data) => {
+    return {
+        type: actions.ORDER_SET_FORM_DATA,
         payload: data
     }
 };

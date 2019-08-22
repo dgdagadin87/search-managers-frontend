@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+
+import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -11,20 +13,27 @@ import {
 import {
     asyncGetOrders,
     changeSearch,
-    changeOnlyMy,
-    changeOnlyActive
+    changeOnlyActive,
+    changeStateId,
+    changeSourceId,
+    changeManagerId
 } from '../../../actions/orders';
+
+import {
+    formatDate,
+    formatRawDate
+} from '../../../../core/coreUtils';
 
 import PageHeader from 'antd/lib/page-header';
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
-import Row from 'antd/lib/row';
-import Col from 'antd/lib/col';
+import Select from 'antd/lib/select';
 import Tag from 'antd/lib/tag';
 
 import Table from '../../parts/Table';
 import Spinner from '../../parts/Spinner';
+import DatePicker from '../../parts/DatePicker';
 
 
 const mapStateToProps = (state) => {
@@ -37,8 +46,15 @@ const mapStateToProps = (state) => {
         sortBy: state.ordersData.sortBy,
         sortType: state.ordersData.sortType,
         searchString: state.ordersData.searchString,
-        onlyMy: state.ordersData.onlyMy,
-        onlyActive: state.ordersData.onlyActive
+        onlyActive: state.ordersData.onlyActive,
+        stateId: state.ordersData.stateId,
+        sourceId: state.ordersData.sourceId,
+        managerId: state.ordersData.managerId,
+        dateFrom: state.ordersData.dateFrom,
+        dateTo: state.ordersData.dateTo,
+        managers: state.commonData.managers,
+        orderStates: state.commonData.orderStates,
+        orderSources: state.commonData.orderSources,
     };
 };
 
@@ -46,12 +62,15 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeTitle,
         changeSearch,
-        changeOnlyMy,
         changeOnlyActive,
+        changeStateId,
+        changeSourceId,
+        changeManagerId,
         asyncGetOrders
     }, dispatch);
 }
 
+const Option = Select.Option;
 
 class OrdersModule extends Component {
 
@@ -90,11 +109,11 @@ class OrdersModule extends Component {
 
         if (data === false) {
 
-            const { page, sortBy, sortType, searchString, onlyMy, onlyActive } = this.props;
+            const { page, sortBy, sortType, searchString, onlyActive, stateId, sourceId } = this.props;
 
             asyncGetOrders(
                 {sortBy, sortType},
-                {searchString, onlyActive, onlyMy},
+                {searchString, onlyActive, stateId, sourceId},
                 {page}
             );
         }
@@ -103,16 +122,61 @@ class OrdersModule extends Component {
         }
     }
 
+    _createFilterObject (fieldName = false, fieldValue) {
+
+        const {
+            searchString = '',
+            onlyActive = false,
+            stateId = undefined,
+            sourceId = undefined,
+            managerId = undefined,
+            dateFrom = null,
+            dateTo = null
+        } = this.props;
+
+        const filter = { searchString, onlyActive, stateId, sourceId, managerId, dateFrom, dateTo };
+
+        if (!fieldName) {
+            return filter;
+        }
+
+        return { ...filter, [fieldName]: fieldValue };
+    }
+
+    _onDateValueChange(fieldName, dateMoment) {
+
+        const {
+            page,
+            sortBy,
+            sortType,
+            asyncGetOrders
+        } = this.props;
+
+        let correctValue;
+
+        if (!dateMoment) {
+            correctValue = null;
+        }
+        else {
+            correctValue = formatRawDate(dateMoment.toDate());
+        }
+
+        asyncGetOrders(
+            {sortBy, sortType},
+            this._createFilterObject(fieldName, correctValue),
+            {page}
+        );
+    }
+
     _onTableChange(pagination, filters, sorter) {
 
         const {asyncGetOrders} = this.props;
         const {field: sortBy = false, order: sortType = false} = sorter;
         const {current: page = 1} = pagination;
-        const { searchString = '', onlyMy = false, onlyActive = false } = this.props;
 
         asyncGetOrders(
             {sortBy, sortType},
-            {searchString, onlyActive, onlyMy},
+            this._createFilterObject(),
             {page}
         );
     }
@@ -123,37 +187,12 @@ class OrdersModule extends Component {
             page,
             sortBy,
             sortType,
-            searchString,
-            onlyMy,
-            onlyActive,
             asyncGetOrders
         } = this.props;
 
         asyncGetOrders(
             {sortBy, sortType},
-            {searchString, onlyActive, onlyMy},
-            {page}
-        );
-    }
-
-    _onMyChange(ev){
-
-        const {
-            page,
-            sortBy,
-            sortType,
-            searchString,
-            onlyActive,
-            asyncGetOrders,
-            changeOnlyMy
-        } = this.props;
-        const onlyMy = ev.target.checked;
-
-        changeOnlyMy(onlyMy);
-
-        asyncGetOrders(
-            {sortBy, sortType},
-            {searchString, onlyActive, onlyMy},
+            this._createFilterObject(),
             {page}
         );
     }
@@ -164,8 +203,6 @@ class OrdersModule extends Component {
             page,
             sortBy,
             sortType,
-            searchString,
-            onlyMy,
             asyncGetOrders,
             changeOnlyActive
         } = this.props;
@@ -175,7 +212,64 @@ class OrdersModule extends Component {
 
         asyncGetOrders(
             {sortBy, sortType},
-            {searchString, onlyActive, onlyMy},
+            this._createFilterObject('onlyActive', onlyActive),
+            {page}
+        );
+    }
+
+    _onSelectStateChange(value) {
+
+        const {
+            page,
+            sortBy,
+            sortType,
+            changeStateId,
+            asyncGetOrders
+        } = this.props;
+
+        changeStateId(value);
+
+        asyncGetOrders(
+            {sortBy, sortType},
+            this._createFilterObject('stateId', value),
+            {page}
+        );
+    }
+
+    _onSelectSourceChange(value) {
+
+        const {
+            page,
+            sortBy,
+            sortType,
+            changeSourceId,
+            asyncGetOrders
+        } = this.props;
+
+        changeSourceId(value);
+
+        asyncGetOrders(
+            {sortBy, sortType},
+            this._createFilterObject('sourceId', value),
+            {page}
+        );
+    }
+
+    _onSelectManagerChange(value) {
+
+        const {
+            page,
+            sortBy,
+            sortType,
+            changeManagerId,
+            asyncGetOrders
+        } = this.props;
+
+        changeManagerId(value);
+
+        asyncGetOrders(
+            {sortBy, sortType},
+            this._createFilterObject('managerId', value),
             {page}
         );
     }
@@ -192,43 +286,119 @@ class OrdersModule extends Component {
 
         const Search = Input.Search;
         const {
+            orderStates = [],
+            orderSources = [],
+            managers = [],
             searchString = '',
             onlyActive = false,
-            onlyMy = false,
-            history
+            stateId = null,
+            sourceId = null,
+            managerId = null,
+            dateFrom = null,
+            dateTo = null
         } = this.props;
+        const correctState = !stateId ? undefined : String(stateId);
+        const correctSource = !sourceId ? undefined : String(sourceId);
+        const correctManager = !managerId ? undefined : String(managerId);
 
         return (
-            <Row>
-                <Col span={3}>
-                    <Button
-                        style={{width:'155px'}}
-                        type="primary"
-                        onClick={() => history.push('/orders/addorder')}
-                    >Добавить заказ</Button>
-                </Col>
-                <Col span={15}>
-                    <Search
-                        placeholder="Поиск заказов по названию, номеру договора, менеджеру, клиенту, организации"
-                        enterButton={true}
-                        size="default"
-                        allowClear={true}
-                        onSearch={this._onSearch.bind(this)}
-                        onChange={this._onSearchChange.bind(this)}
-                        value={searchString}
-                    />
-                </Col>
-                <Col span={6} style={{textAlign:'right', paddingTop:'5px'}}>
-                    <Checkbox
-                        onChange={this._onMyChange.bind(this)}
-                        checked={onlyMy}
-                    >Мои заказы</Checkbox>
-                    <Checkbox
-                        onChange={this._onActiveChange.bind(this)}
-                        checked={onlyActive}
-                    >Активные</Checkbox>
-                </Col>
-            </Row>
+            <Fragment>
+                <Search
+                    title="Поиск осуществляется по названию, номеру договора, клиенту, организации"
+                    key="search"
+                    style={{width: '305px'}}
+                    placeholder="Введите строку поиска"
+                    enterButton={true}
+                    size="default"
+                    allowClear={true}
+                    onSearch={this._onSearch.bind(this)}
+                    onChange={this._onSearchChange.bind(this)}
+                    value={searchString}
+                />
+                <Select
+                    allowClear={true}
+                    key="selectState"
+                    className="custom-select"
+                    size={'default'}
+                    value={correctState}
+                    style={{width:'200px', marginLeft:'10px'}}
+                    placeholder="Выберите статус"
+                    onChange={this._onSelectStateChange.bind(this)}
+                >
+                    {orderStates.map(item => {
+                        return (
+                            <Option
+                                key={item['id']}
+                                value={String(item['id'])}
+                            >
+                                {item['name']}
+                            </Option>
+                        );
+                    })}
+                </Select>
+                <Checkbox
+                    style={{marginLeft:'10px'}}
+                    key="onlyActive"
+                    onChange={this._onActiveChange.bind(this)}
+                    checked={onlyActive}
+                >Активные</Checkbox>
+                <Select
+                    allowClear={true}
+                    key="selectSource"
+                    className="custom-select"
+                    size={'default'}
+                    value={correctSource}
+                    style={{width:'200px', marginLeft:'5px'}}
+                    placeholder="Выберите источник"
+                    onChange={this._onSelectSourceChange.bind(this)}
+                >
+                    {orderSources.map(item => {
+                        return (
+                            <Option
+                                key={item['id']}
+                                value={String(item['id'])}
+                            >
+                                {item['name']}
+                            </Option>
+                        );
+                    })}
+                </Select>
+                <Select
+                    allowClear={true}
+                    key="selectManager"
+                    className="custom-select"
+                    size={'default'}
+                    value={correctManager}
+                    style={{width:'200px', marginLeft:'10px'}}
+                    placeholder="Выберите менеджера"
+                    onChange={this._onSelectManagerChange.bind(this)}
+                >
+                    {managers.map(item => {
+                        return (
+                            <Option
+                                key={item['id']}
+                                value={String(item['id'])}
+                            >
+                                {item['name']}
+                            </Option>
+                        );
+                    })}
+                </Select>
+                <DatePicker
+                    style={{width:'120px', marginLeft:'10px'}}
+                    size={'default'}
+                    value={formatDate(dateFrom)}
+                    placeholder="Дата с"
+                    onChange={(dateMoment) => this._onDateValueChange('dateFrom', dateMoment)}
+                />
+                <DatePicker
+                    style={{width:'120px', marginLeft:'10px'}}
+                    size={'default'}
+                    value={formatDate(dateTo)}
+                    placeholder="Дата по"
+                    onChange={(dateMoment) => this._onDateValueChange('dateTo', dateMoment)}
+                />
+            </Fragment>
         );
     }
 
@@ -238,17 +408,15 @@ class OrdersModule extends Component {
             {
                 title: () => <span>Название</span>,
                 dataIndex: 'name',
-                key: 'contractNumber',
-                width: 305,
+                key: 'name',
                 sorter: true,
                 render: (text, record) => {
-                    const substredText = text.length > 33 ? text.substr(0, 33) + '..' : text;
                     return (
                         <Link
                             title={text}
                             to={'/orders/edit/' + record['number']}
                         >
-                            {substredText}
+                            {text}
                         </Link>
                     );
                 }
@@ -257,23 +425,9 @@ class OrdersModule extends Component {
                 title: 'Заказчик',
                 dataIndex: 'client',
                 key: 'client',
-                width: 140,
+                width: 250,
                 render: (client) => {
                     const {name = ''} = client;
-                    return name;
-                },
-                sorter: true
-            },
-            {
-                title: 'Менеджер',
-                dataIndex: 'manager',
-                key: 'manager',
-                width: 140,
-                render: (manager) => {
-                    if (!manager) {
-                        return '';
-                    }
-                    const {name = ''} = manager;
                     return name;
                 },
                 sorter: true
@@ -282,9 +436,11 @@ class OrdersModule extends Component {
                 title: 'Организация',
                 dataIndex: 'client',
                 key: 'organization',
+                width: 180,
                 render: (client) => {
                     const {agent = ''} = client;
-                    return agent;
+                    const substredText = agent.length > 20 ? agent.substr(0, 20) + '..' : agent;
+                    return <span title={agent}>{substredText}</span>;
                 },
                 style: {background:'red'},
                 sorter: false
@@ -292,7 +448,7 @@ class OrdersModule extends Component {
             {
                 title: 'Статус',
                 dataIndex: 'stateId',
-                width: 120,
+                width: 130,
                 key: 'stateId',
                 align: 'center',
                 render: (stateId) => {
@@ -312,36 +468,62 @@ class OrdersModule extends Component {
                 title: 'Источник',
                 dataIndex: 'source',
                 key: 'source',
-                width: 85,
+                width: 130,
                 align: 'center',
                 render: (source) => {
                     const {name = '', id = '0'} = source;
+                    const correctName = !name ? 'default' : name;
                     const currentBackground = this._sourceColors[id];
                     return (
                         <Tag
-                            title={name}
+                            title={correctName}
                             style={{textTransform: 'uppercase', background:currentBackground}}
                         >
-                            {name}
+                            {correctName}
                         </Tag>
                     );
                 },
                 sorter: true
             },
             {
-                title: () => <span title="Дата поступления">Поступление</span>,
+                title: () => <span title="Дата поступления">Поступл.</span>,
                 dataIndex: 'createDate',
                 key: 'createDate',
-                width: 95,
+                width: 100,
                 align: 'center',
+                render: (dateValue) => {
+                    if (!dateValue){
+                        return '--.--.----';
+                    }
+                    const dateArray = dateValue.split('-');
+
+                    return dateArray[2] + '.' + dateArray[1] + '.' + dateArray[0];
+                },
                 sorter: true
             },
             {
-                title: () => <span title="Дата выполнения">Выполнение</span>,
-                dataIndex: 'completeDate',
-                key: 'completeDate',
-                width: 95,
-                align: 'center',
+                title: '№ контр-та',
+                dataIndex: 'contractNumber',
+                key: 'contractNumber',
+                width: 105,
+                sorter: false,
+                render: (text) => {
+                    const substredText = text.length > 12 ? text.substr(0, 12) + '..' : text;
+                    return <span title={text}>{substredText}</span>;
+                },
+            },
+            {
+                title: 'М-жер',
+                dataIndex: 'manager',
+                key: 'manager',
+                width: 110,
+                render: (manager) => {
+                    if (!manager) {
+                        return '';
+                    }
+                    const {name = ''} = manager;
+                    return name;
+                },
                 sorter: true
             },
         ];
@@ -356,8 +538,8 @@ class OrdersModule extends Component {
                 columns={columns}
                 dataSource={correctData}
                 bordered={false}
-                size="middle"
-                pagination={{current: page, total: count, pageSize: 20}}
+                size="small"
+                pagination={{current: page, total: count, pageSize: 100}}
                 title={() => this._renderTableFilter()}
                 onChange={this._onTableChange.bind(this)}
             />
@@ -372,6 +554,13 @@ class OrdersModule extends Component {
                     onBack={() => null}
                     title="Заказы"
                     subTitle="Отображение списка заказов с возможностью фильтрации"
+                    extra={[
+                        <Button
+                            key="addOrder"
+                            type="primary"
+                            onClick={() => history.push('/orders/addorder')}
+                        >Добавить заказ</Button>
+                    ]}
                 />
                 {this._renderTable()}
             </div>
@@ -385,6 +574,26 @@ class OrdersModule extends Component {
         return isLoading && data === false ? <Spinner /> : this._renderBody();
     }
 
+};
+
+OrdersModule.propTypes = {
+    data: PropTypes.any.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    page: PropTypes.number.isRequired,
+    pages: PropTypes.number.isRequired,
+    count: PropTypes.number.isRequired,
+    sortBy: PropTypes.any.isRequired,
+    sortType: PropTypes.any.isRequired,
+    searchString: PropTypes.any,
+    onlyActive: PropTypes.bool.isRequired,
+    stateId: PropTypes.any,
+    sourceId: PropTypes.any,
+    managerId: PropTypes.any,
+    dateFrom: PropTypes.any,
+    dateTo: PropTypes.any,
+    managers: PropTypes.array.isRequired,
+    orderStates: PropTypes.array.isRequired,
+    orderSources: PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersModule);
