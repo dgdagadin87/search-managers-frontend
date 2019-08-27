@@ -89,45 +89,48 @@ class Grid extends Component {
 
         const columns = [
             {
-                title: 'Наименование области',
+                title: 'Область',
                 dataIndex: 'region',
-                width: 200
+                width: 170
             },
             {
                 title: 'Наименование файла',
                 dataIndex: 'fileName',
                 render: (text) => {
-                    const substredText = text.length > 40 ? text.substr(0, 40) + '..' : text;
+                    const substredText = text.length > 55 ? text.substr(0, 53) + '..' : text;
                     return (
                         <span title={text}>{substredText}</span>
                     );
                 }
             },
             {
-                title: '',
+                title: 'Операции',
                 align: 'center',
                 dataIndex: 'loadButton',
-                width: 215,
+                width: 165,
                 render: (text, record) => {
                     return (
                         <span>
                             <Button
+                                size="small"
                                 type="primary"
                                 title="Скачать"
                                 className="distributors-button"
                             >
                                 <Icon type="caret-down" theme="filled" />
                             </Button>
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;
                             <Button
+                                size="small"
                                 type="primary"
                                 title="Показать на search.kosmosnimki.ru"
                                 className="distributors-button"
                             >
                                 <Icon type="security-scan" theme="filled" />
                             </Button>
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;
                             <Button
+                                size="small"
                                 type="primary"
                                 title="Редактировать"
                                 className="distributors-button"
@@ -135,8 +138,9 @@ class Grid extends Component {
                             >
                                 <Icon type="edit" theme="filled" />
                             </Button>
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;
                             <Button
+                                size="small"
                                 type="primary"
                                 title="Удалить"
                                 className="distributors-button"
@@ -156,13 +160,13 @@ class Grid extends Component {
             <Fragment>
                 <Form />
                 <Card
-                    style={{marginTop:'10px'}}
                     size="small"
                     title="AOI"
                 >
                     <div
-                        style={{height: '287px', maxHeight: '287px', overflowY:'scroll'}}>
+                        style={{height: '270px', maxHeight: '270px', overflowY:'scroll'}}>
                         <Table
+                            size="small"
                             rowKey="id"
                             loading={isLoading}
                             bordered={true}

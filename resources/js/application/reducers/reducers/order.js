@@ -7,12 +7,12 @@ const correctCreateDate = formatRawDate(new Date());
 const initialState = {
     disabled: false,
     isLoading: false,
-    isDistLoading: false,
-    //isAoiLoading: false,
     orderData: {
         id: null,
         name: '',
         comment: '',
+        request: '',
+        xstatus: '',
         manager: undefined,
         state: undefined,
         source: undefined,
@@ -28,9 +28,7 @@ const initialState = {
         paymentDate: null,
         actDate: null
     },
-    //aoi: [],
-    scenes : [],
-    distributors : []
+    scenes : []
 };
 
 export default function (state = initialState, action) {
@@ -41,17 +39,13 @@ export default function (state = initialState, action) {
 
             const {
                 orderData = {},
-                //aoi = [],
-                scenes = [],
-                distributors = []
+                scenes = []
             } = action['payload'];
 
             return {
                 ...state,
                 orderData,
-                //aoi,
-                scenes,
-                distributors
+                scenes
             };
 
         case actions.ORDER_SET_FORM_DATA:
@@ -60,11 +54,8 @@ export default function (state = initialState, action) {
         case actions.ORDER_SET_LOADING:
             return { ...state, isLoading: action.payload };
 
-            case actions.ORDER_SET_DISABLED:
-                    return { ...state, disabled: action.payload };
-
-        case actions.DIST_SET_LOADING:
-            return { ...state, isDistLoading: action.payload };
+        case actions.ORDER_SET_DISABLED:
+            return { ...state, disabled: action.payload };
         
         case actions.AOI_SET_LOADING:
                 return { ...state, isAoiLoading: action.payload };
@@ -72,11 +63,14 @@ export default function (state = initialState, action) {
         case actions.DIST_SET_DATA:
             return { ...state, distributors: action.payload };
 
-        case actions.AOI_SET_DATA:
-                return { ...state, aoi: action.payload };
-
         default:
             return state;
-
     }
 }
+
+export const setAOIData = (data) => {
+    return {
+        type: actions.AOI_SET_DIFFERENT_DATA,
+        payload: data
+    }
+};

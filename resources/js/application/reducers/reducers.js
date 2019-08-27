@@ -6,6 +6,7 @@ import orders from './reducers/orders';
 import order from './reducers/order';
 import addOrder from './reducers/addOrder';
 import aoi from './reducers/aoi';
+import distributors from './reducers/distributors';
 import customers from './reducers/customers';
 import customer from './reducers/customer';
 import addCustomer from './reducers/addCustomer';
@@ -19,6 +20,7 @@ const allReducers = combineReducers({
     orderData: order,
     addOrderData: addOrder,
     aoiData: aoi,
+    distributorsData: distributors,
     customersData: customers,
     customerData: customer,
     addCustomerData: addCustomer

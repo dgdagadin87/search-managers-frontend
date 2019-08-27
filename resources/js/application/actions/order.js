@@ -109,63 +109,6 @@ export const asyncEditOrder = (dataToSend, showError) => {
     }
 };
 
-export const asyncGetDistributors = (orderId) => {
-
-    return dispatch => {
-
-        dispatch({ type: actions['DIST_SET_LOADING'], payload: true });
-        
-        Request.send({
-            url: createUrl(defaultSettings, urlSettings['getDistributors']),
-            data: { orderId }
-        })
-        .then( (data) => {
-
-            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
-            dispatch({ type: actions['DIST_SET_DATA'], payload: data });
-        })
-        .catch((error) => {
-            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
-            console.log('error', error);
-            const {message, statusText} = error;
-            const errorMessage = statusText ? statusText : message;
-            alert(errorMessage);
-        });
-    }
-};
-
-export const asyncDeleteDistributor = (id, orderId) => {
-
-    return dispatch => {
-
-        dispatch({ type: actions['DIST_SET_LOADING'], payload: true });
-
-        Request.send({
-            url: createUrl(defaultSettings, urlSettings['deleteDistributor']),
-            data: { id }
-        })
-        .then( () => {
-
-            return Request.send({
-                url: createUrl(defaultSettings, urlSettings['getDistributors']),
-                data: { orderId }
-            })
-        })
-        .then( (data) => {
-
-            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
-            dispatch({ type: actions['DIST_SET_DATA'], payload: data });
-        })
-        .catch((error) => {
-            dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
-            console.log('error', error);
-            const {message, statusText} = error;
-            const errorMessage = statusText ? statusText : message;
-            alert(errorMessage);
-        });
-    }
-};
-
 export const setAddOrderData = (data) => {
     return {
         type: actions.ADD_ORDER_SET_DATA,

@@ -18,7 +18,8 @@ export default class Grid extends Component {
             bordered = false,
             className = '',
             size = 'middle',
-            onChange = null
+            onChange = null,
+            sampleEmpty = false
         } = this.props;
 
         return (
@@ -33,7 +34,7 @@ export default class Grid extends Component {
                 className={className}
                 size={size}
                 onChange={onChange}
-                locale={{ emptyText: <Empty description="Нет данных для отображения" /> }}
+                locale={{ emptyText: sampleEmpty ? 'Нет данных для отображения' : <Empty description="Нет данных для отображения" /> }}
             />
         );
     }

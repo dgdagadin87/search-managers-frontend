@@ -58,18 +58,18 @@ body {
     color: red;
 }
 
-.order-list .ant-tag {
-    font-size: 11px;
-    padding:0 3px;
-    border-color: #bbb;
-    color: rgba(0,0,0,0.85);
-}
-
 .order .order-label {
     color: rgba(0,0,0,0.85);
     font-size: 14px;
 }
 
+/*
+.order-list .ant-tag {
+    font-size: 11px;
+    padding:0 3px;
+    border-color: #bbb;
+    color: rgba(0,0,0,0.85);
+}*/
 /*.main-header .ant-menu {
     color: rgba(0, 0, 0, 0.8) !important;
 }

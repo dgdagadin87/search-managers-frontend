@@ -24,7 +24,7 @@ export default function (state = initialState, action) {
 
         case actions.ORDERS_SET_DATA:
             const {collection = [], filter = {}, order = {}, paging = {}} = action['payload'];
-            return { ...state, collection, ...filter, ...order, ...paging };
+            return { ...state, collection, ...filter, ...paging, sortBy: order['field'], sortType: order['mode'] };
 
         case actions.ORDERS_SET_SEARCH:
             return { ...state, searchString: action.payload };

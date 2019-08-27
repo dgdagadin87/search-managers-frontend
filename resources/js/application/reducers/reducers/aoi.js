@@ -30,9 +30,6 @@ export default function (state = initialState, action) {
         case actions.AOI_SET_DATA:
             return { ...state, aoi: action.payload };
 
-        case actions.AOI_SET_FORM_DATA:
-            return { ...state, aoiData: action.payload };
-
         case actions.AOI_SET_DIFFERENT_DATA:
             return { ...state, ...action.payload };
 

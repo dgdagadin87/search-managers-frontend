@@ -57,7 +57,7 @@ class DistributorsGrid extends Component {
 
     render() {
 
-        const {distributors = [], distribSources = [], isDistLoading = false} = this.props;
+        const {distributors = [], distribSources = [], isLoading = false} = this.props;
 
         const columns = [
             {
@@ -144,7 +144,7 @@ class DistributorsGrid extends Component {
         return (
             <div style={{maxHeight: '300px', overflowY:'scroll'}}>
                 <Table
-                    loading={isDistLoading}
+                    loading={isLoading}
                     className="distributors"
                     rowKey="id"
                     bordered={true}

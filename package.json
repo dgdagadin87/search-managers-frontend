@@ -1,7 +1,7 @@
 {
-  "name": "4stor-manager",
+  "name": "search-managers-frontend",
   "version": "0.0.1",
-  "description": "4stor Manager",
+  "description": "Search Managers Frontend",
   "author": "D.G.Dagadin",
   "license": "ISC",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "antd": "latest",
-    "connected-react-router": "^6.3.2",
+    "connected-react-router": "latest",
     "css-loader": "latest",
     "history": "latest",
     "jquery": "latest",

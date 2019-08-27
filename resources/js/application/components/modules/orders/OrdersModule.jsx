@@ -34,6 +34,7 @@ import Tag from 'antd/lib/tag';
 import Table from '../../parts/Table';
 import Spinner from '../../parts/Spinner';
 import DatePicker from '../../parts/DatePicker';
+import { FromToPicker } from '../../parts/DatePicker';
 
 
 const mapStateToProps = (state) => {
@@ -71,6 +72,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const Option = Select.Option;
+const { RangePicker } = DatePicker;
 
 class OrdersModule extends Component {
 
@@ -141,6 +143,43 @@ class OrdersModule extends Component {
         }
 
         return { ...filter, [fieldName]: fieldValue };
+    }
+
+    _onRangeValueChange(dates) {
+
+        const {
+            page,
+            sortBy,
+            sortType,
+            asyncGetOrders
+        } = this.props;
+
+        let correctFromValue;
+        let correctToValue;
+
+        if (!dates[0]) {
+            correctFromValue = null;
+        }
+        else {
+            correctFromValue = formatRawDate(dates[0].toDate());
+        }
+
+        if (!dates[1]) {
+            correctToValue = null;
+        }
+        else {
+            correctToValue = formatRawDate(dates[1].toDate());
+        }
+
+        asyncGetOrders(
+            {sortBy, sortType},
+            {
+                ...this._createFilterObject(),
+                dateFrom: correctFromValue,
+                dateTo: correctToValue
+            },
+            {page}
+        );
     }
 
     _onDateValueChange(fieldName, dateMoment) {
@@ -306,7 +345,7 @@ class OrdersModule extends Component {
                 <Search
                     title="Поиск осуществляется по названию, номеру договора, клиенту, организации"
                     key="search"
-                    style={{width: '305px'}}
+                    style={{width: '300px'}}
                     placeholder="Введите строку поиска"
                     enterButton={true}
                     size="default"
@@ -315,13 +354,19 @@ class OrdersModule extends Component {
                     onChange={this._onSearchChange.bind(this)}
                     value={searchString}
                 />
+                <Checkbox
+                    style={{marginLeft:'10px'}}
+                    key="onlyActive"
+                    onChange={this._onActiveChange.bind(this)}
+                    checked={onlyActive}
+                >Активные</Checkbox>
                 <Select
                     allowClear={true}
                     key="selectState"
                     className="custom-select"
                     size={'default'}
                     value={correctState}
-                    style={{width:'200px', marginLeft:'10px'}}
+                    style={{width:'180px', marginLeft:'5px'}}
                     placeholder="Выберите статус"
                     onChange={this._onSelectStateChange.bind(this)}
                 >
@@ -336,19 +381,13 @@ class OrdersModule extends Component {
                         );
                     })}
                 </Select>
-                <Checkbox
-                    style={{marginLeft:'10px'}}
-                    key="onlyActive"
-                    onChange={this._onActiveChange.bind(this)}
-                    checked={onlyActive}
-                >Активные</Checkbox>
                 <Select
                     allowClear={true}
                     key="selectSource"
                     className="custom-select"
                     size={'default'}
                     value={correctSource}
-                    style={{width:'200px', marginLeft:'5px'}}
+                    style={{width:'180px', marginLeft:'10px'}}
                     placeholder="Выберите источник"
                     onChange={this._onSelectSourceChange.bind(this)}
                 >
@@ -369,7 +408,7 @@ class OrdersModule extends Component {
                     className="custom-select"
                     size={'default'}
                     value={correctManager}
-                    style={{width:'200px', marginLeft:'10px'}}
+                    style={{width:'180px', marginLeft:'10px'}}
                     placeholder="Выберите менеджера"
                     onChange={this._onSelectManagerChange.bind(this)}
                 >
@@ -384,25 +423,23 @@ class OrdersModule extends Component {
                         );
                     })}
                 </Select>
-                <DatePicker
-                    style={{width:'120px', marginLeft:'10px'}}
+                <FromToPicker
+                    separator="|"
+                    placeholder={['Дата поступления', 'Дата выполнения']}
                     size={'default'}
-                    value={formatDate(dateFrom)}
-                    placeholder="Дата с"
-                    onChange={(dateMoment) => this._onDateValueChange('dateFrom', dateMoment)}
+                    style={{marginLeft:'10px'}}
+                    value={[formatDate(dateFrom), formatDate(dateTo)]}
+                    onChange={(dates) => this._onRangeValueChange(dates)}
                 />
-                <DatePicker
-                    style={{width:'120px', marginLeft:'10px'}}
-                    size={'default'}
-                    value={formatDate(dateTo)}
-                    placeholder="Дата по"
-                    onChange={(dateMoment) => this._onDateValueChange('dateTo', dateMoment)}
-                />
+                
             </Fragment>
         );
     }
 
     _renderTable() {
+
+        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false} = this.props;
+        const correctData = data === false ? [] : data;
 
         const columns = [
             {
@@ -410,6 +447,7 @@ class OrdersModule extends Component {
                 dataIndex: 'name',
                 key: 'name',
                 sorter: true,
+                sortOrder: sortBy === 'name' && sortType,
                 render: (text, record) => {
                     return (
                         <Link
@@ -430,7 +468,8 @@ class OrdersModule extends Component {
                     const {name = ''} = client;
                     return name;
                 },
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'client' && sortType
             },
             {
                 title: 'Организация',
@@ -454,15 +493,17 @@ class OrdersModule extends Component {
                 render: (stateId) => {
                     const currentState = this._stateColors[stateId] || {};
                     const {color = '', name = '', short = false} = currentState;
+                    const correctName = !name ? 'default' : name;
                     return (
                         <Tag
-                            title={name}
+                            title={correctName}
                             style={{textTransform: 'uppercase', background:color}}
                         >
-                            {short ? short : name}
+                            {short ? short : correctName}
                         </Tag>);
                 },
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'stateId' && sortType
             },
             {
                 title: 'Источник',
@@ -483,7 +524,8 @@ class OrdersModule extends Component {
                         </Tag>
                     );
                 },
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'source' && sortType
             },
             {
                 title: () => <span title="Дата поступления">Поступл.</span>,
@@ -499,10 +541,11 @@ class OrdersModule extends Component {
 
                     return dateArray[2] + '.' + dateArray[1] + '.' + dateArray[0];
                 },
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'createDate' && sortType
             },
             {
-                title: '№ контр-та',
+                title: '№ контр.',
                 dataIndex: 'contractNumber',
                 key: 'contractNumber',
                 width: 105,
@@ -524,12 +567,10 @@ class OrdersModule extends Component {
                     const {name = ''} = manager;
                     return name;
                 },
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'manager' && sortType
             },
         ];
-
-        const {data = [], page = 1, count = 1, isLoading = false} = this.props;
-        const correctData = data === false ? [] : data;
 
         return (
             <Table
@@ -558,7 +599,7 @@ class OrdersModule extends Component {
                         <Button
                             key="addOrder"
                             type="primary"
-                            onClick={() => history.push('/orders/addorder')}
+                            onClick={() => this.props.history.push('/orders/addorder')}
                         >Добавить заказ</Button>
                     ]}
                 />

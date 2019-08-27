@@ -7,7 +7,8 @@ const defaultSettings = {
 const uiSettings = {
     fieldSize: 'default',
     labelStyle: {marginTop:'5px'},
-    formFieldWidth: 352
+    formFieldWidth: 362,
+    editOrderFieldWidth: 285
 };
 
 const pageSettings = {

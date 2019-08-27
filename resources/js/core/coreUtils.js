@@ -53,4 +53,31 @@ function formatRawDate(inputDate) {
     };
 }
 
-export {isEmpty, createUrl, emptyFunction, checkEmail, formatDate, formatRawDate};
+function formatDateUTC (value) {
+
+    if (!value) {
+        return null;
+    }
+
+    if (typeof value !== 'string') {
+        return value;
+    }
+
+    const valueArray = value.split('-');
+
+    return {
+        day: parseInt(valueArray[2]),
+        month: parseInt(valueArray[1]),
+        year: parseInt(valueArray[0])
+    };
+}
+
+function formatDateForSend (dateValue) {
+    if (!dateValue){
+        return null;
+    }
+    
+    return dateValue['year'] + '-' + (parseInt(dateValue['month'], 10) > 9 ? dateValue['month'] : '0' + dateValue['month']) + '-' + (parseInt(dateValue['day'], 10) > 9 ? dateValue['day'] : '0' + dateValue['day']);
+};
+
+export {isEmpty, createUrl, emptyFunction, checkEmail, formatDate, formatRawDate, formatDateUTC, formatDateForSend};

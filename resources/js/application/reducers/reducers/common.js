@@ -7,6 +7,7 @@ const initialState = {
     orderStates: [],
     orderSources: [],
     distribSources: [],
+    applications: [],
     title: ''
 };
 
@@ -21,9 +22,19 @@ export default function (state = initialState, action) {
                 managers = [],
                 orderStates = [],
                 orderSources = [],
-                distribSources = []
+                distribSources = [],
+                applications = []
             } = action.payload;
-            return {...state, userData: managerData, orgTypes, managers, orderStates, orderSources, distribSources};
+            return {
+                ...state,
+                orgTypes,
+                managers,
+                orderStates,
+                orderSources,
+                distribSources,
+                applications,
+                userData: managerData
+            };
 
         case actions.COMMON_SET_TITLE:
             document.title = 'Система оформления заказов - ' + action.payload;

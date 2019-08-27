@@ -4,8 +4,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {
-    asyncGetAOI,
-    asyncDeleteAOI,
     asyncSaveAOI,
     setAOIData
 } from '../../../../actions/aoi';
@@ -29,8 +27,6 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        asyncGetAOI,
-        asyncDeleteAOI,
         asyncSaveAOI,
         setAOIData
     }, dispatch);

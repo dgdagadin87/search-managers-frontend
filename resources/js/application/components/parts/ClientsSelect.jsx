@@ -60,7 +60,7 @@ export default class ClientSelect extends Component {
 
     render() {
 
-        const { disabled = false, value = {}, onChange } = this.props;
+        const { disabled = false, value = {}, width = null, dropdownMatchSelectWidth = false, onChange } = this.props;
         const clientName = value['name'] || undefined;
         const { clientsSource = [], clientsIsLoading = false } = this.state;
 
@@ -68,10 +68,10 @@ export default class ClientSelect extends Component {
             <Select
                 disabled={disabled}
                 showSearch={true}
-                size={uiSettings['fieldSize']}
                 value={clientName}
-                style={{ width: uiSettings['formFieldWidth'] }}
+                style={{ width: !width ? uiSettings['formFieldWidth'] : width }}
                 defaultActiveFirstOption={false}
+                dropdownMatchSelectWidth={!dropdownMatchSelectWidth ? true : dropdownMatchSelectWidth}
                 filterOption={false}
                 loading={clientsIsLoading}
                 suffixIcon={<Icon type="search" />}
