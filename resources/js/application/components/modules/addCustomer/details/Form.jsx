@@ -1,5 +1,7 @@
 import React, {Component, Fragment} from 'react';
 
+import PropTypes from 'prop-types';
+
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Input from 'antd/lib/input';
@@ -34,9 +36,10 @@ class Form extends Component {
 
         return (
             <Select
+                placeholder="Выберите тип организации"
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={String(orgType)}
+                value={orgType && orgType != '0' ? String(orgType) : undefined}
                 style={{ width: 351 }}
                 onChange={this._onSelectChange.bind(this)}
             >
@@ -74,7 +77,7 @@ class Form extends Component {
             <Fragment>
                 <Row>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">ФИО Заказчика</span>&nbsp;
+                        <span className="order-label">ФИО Заказчика</span>
                         <span className="strict">*</span>
                     </Col>
                     <Col span={17}>
@@ -89,7 +92,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Должность</span>&nbsp;
+                        <span className="order-label">Должность</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -103,7 +106,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Адрес</span>&nbsp;
+                        <span className="order-label">Адрес</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -117,7 +120,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Организация</span>&nbsp;
+                        <span className="order-label">Организация</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -131,7 +134,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Тип организации</span>&nbsp;
+                        <span className="order-label">Тип организации</span>
                     </Col>
                     <Col span={17}>
                         {this._renderOrgTypeSelect()}
@@ -139,7 +142,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Телефон</span>&nbsp;
+                        <span className="order-label">Телефон</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -153,7 +156,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Телефон 2</span>&nbsp;
+                        <span className="order-label">Телефон 2</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -167,7 +170,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Факс</span>&nbsp;
+                        <span className="order-label">Факс</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -181,7 +184,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Email</span>&nbsp;
+                        <span className="order-label">Email</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -195,7 +198,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Email 2</span>&nbsp;
+                        <span className="order-label">Email 2</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -209,7 +212,7 @@ class Form extends Component {
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
                     <Col style={{paddingTop: '4px'}} span={7}>
-                        <span className="order-label">Веб-сайт</span>&nbsp;
+                        <span className="order-label">Веб-сайт</span>
                     </Col>
                     <Col span={17}>
                         <Input
@@ -225,6 +228,13 @@ class Form extends Component {
         );
     }
 
+};
+
+Form.propTypes = {
+    onChangeState: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    customerData: PropTypes.object.isRequired,
+    orgTypes: PropTypes.array.isRequired
 };
 
 export default Form;

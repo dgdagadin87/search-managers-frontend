@@ -53,8 +53,6 @@ export const asyncSaveCustomer = (dataToSend) => {
 
             dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
             dispatch({ type: actions['CUSTOMERS_SET_DEFAULT'], payload: false }); // !! TODO !!
-            
-            hide();
 
             Message.success('Пользователь успешно сохранен', 3);
         })

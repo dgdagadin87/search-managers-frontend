@@ -112,11 +112,16 @@ export const asyncSaveDistributor = (orderId, formData) => {
         })
         .then( (data) => {
 
+            if (!data) {
+                return;
+            }
+
             dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
             dispatch({ type: actions['DIST_SET_DATA'], payload: data });
         })
         .catch((error) => {
             dispatch({ type: actions['DIST_SET_LOADING'], payload: false });
+            dispatch({ type: actions['DIST_SET_DISABLED'], payload: false });
             console.log('error', error);
             const {message, statusText} = error;
             const errorMessage = statusText ? statusText : message;

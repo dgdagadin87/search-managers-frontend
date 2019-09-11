@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+
+import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -72,7 +74,7 @@ class CustomerModule extends Component {
         const {id} = params;
 
         return (
-            <div className="order">
+            <Fragment>
                 <Header
                     disabled={disabled}
                     customerData={customerData}
@@ -89,7 +91,7 @@ class CustomerModule extends Component {
                     collection={collection}
                     customerData={customerData}
                 />
-            </div>
+            </Fragment>
         );
     }
 
@@ -100,6 +102,14 @@ class CustomerModule extends Component {
         return isLoading ? <Spinner /> : this._renderBody();
     }
 
+};
+
+CustomerModule.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    collection: PropTypes.array.isRequired,
+    customerData: PropTypes.object.isRequired,
+    orgTypes: PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerModule);

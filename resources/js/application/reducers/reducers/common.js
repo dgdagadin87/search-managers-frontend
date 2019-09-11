@@ -8,6 +8,9 @@ const initialState = {
     orderSources: [],
     distribSources: [],
     applications: [],
+    dTypes: [],
+    sceneParts: [],
+    prodTypes: [],
     title: ''
 };
 
@@ -23,7 +26,10 @@ export default function (state = initialState, action) {
                 orderStates = [],
                 orderSources = [],
                 distribSources = [],
-                applications = []
+                applications = [],
+                dTypes = [],
+                sceneParts = [],
+                prodTypes = []
             } = action.payload;
             return {
                 ...state,
@@ -33,7 +39,10 @@ export default function (state = initialState, action) {
                 orderSources,
                 distribSources,
                 applications,
-                userData: managerData
+                dTypes,
+                userData: managerData,
+                sceneParts,
+                prodTypes
             };
 
         case actions.COMMON_SET_TITLE:

@@ -373,7 +373,7 @@ class AddOrderModule extends Component {
                             </Col>
                             <Col span={17}>
                                 <Input
-                                    maxLength={40}
+                                    maxLength={50}
                                     disabled={disabled}
                                     size={uiSettings['fieldSize']}
                                     value={name}

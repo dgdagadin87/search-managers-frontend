@@ -199,21 +199,23 @@ class Grid extends Component {
                     title="Перечень дистрибьюторов"
                     style={{marginTop: '10px'}}
                 >
-                    <div style={{ maxWidth: '1000px', overflow: 'scroll', maxHeight: '270px'}}><div
-                        style={{width: '1000px',height: '270px'}}
-                    >
-                        <Table
-                            sampleEmpty={true}
-                            size="small"
-                            loading={isLoading}
-                            rowKey="id"
-                            bordered={true}
-                            columns={columns}
-                            dataSource={distributors}
-                            pagination={false}
-                            title={() => <Button onClick={this._onAddHandler.bind(this)} type="primary">Добавить дистрибьютора</Button>}
-                        />
-                    </div></div>
+                    <div style={{ maxWidth: '1000px', overflow: 'scroll', maxHeight: '235px'}}>
+                        <div
+                            style={{width: '1000px',height: '235px'}}
+                        >
+                            <Table
+                                sampleEmpty={true}
+                                size="small"
+                                loading={isLoading}
+                                rowKey="id"
+                                bordered={true}
+                                columns={columns}
+                                dataSource={distributors}
+                                pagination={false}
+                                title={() => <Button onClick={this._onAddHandler.bind(this)} type="primary">Добавить дистрибьютора</Button>}
+                            />
+                        </div>
+                    </div>
                 </Card>
             </Fragment>
         );

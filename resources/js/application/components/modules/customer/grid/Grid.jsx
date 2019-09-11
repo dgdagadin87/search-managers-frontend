@@ -7,44 +7,26 @@ import Tag from 'antd/lib/tag';
 
 import Table from '../../../parts/Table';
 
+import stateColors from '../../orders/OrdersModule';
+import sourceColors from '../../orders/OrdersModule';
+
 
 const Panel = Collapse.Panel;
-
-const stateColors = {
-    '1': {name: 'Предварительный', color: '#E1E1FF', short: 'Предв.'},
-    '12': {name: 'Оформление договора', color: '#FBEC5D', short: 'Оформл. дог-ра'},
-    '2': {name: 'К оплате', color:'#FFE1E1'},
-    '7': {name: 'Оплачен, в обработке', color: '#FFEECC', short: 'Оплачен, в обр.'},
-    '3': {name: 'В работе', color: '#FFFFCC'},
-    '9': {name: 'Оформление акта', color: '#FBEC5D', short: 'Оформл. акта'},
-    '17': {name: 'В оплате по акту', color: '#FBEC5D', short: 'Опл. п/а'},
-    '6': {name: 'Оплачен, выполнен', color: '#D8FFD8', short: 'Опл., вып.'},
-    '8': {name: 'Выполнен без оплаты', color: '#CCCCCC', short: 'Выполнен, б/о'},
-    '4': {name: 'Выполнен', color: '#C8FFC8'},
-    '5': {name: 'Отменен', color: '#CCCCCC'},
-    '15': {name: 'Оплата по акту, в обработке', color: '#FFEECC', short: 'Опл. п/а, в обр.'},
-    '18': {name: 'Выполнен, задержка оплаты', color: '#FFFFCC', short: 'Выполнен, з/о'},
-};
-
-const sourceColors = {
-    '3': '#AAFFAA',
-    '4': '#CCFFCC',
-    '1': '#FFAAAA',
-    '2': '#FFCCCC',
-    '5': '#DDDDFF'
-};
 
 const columns = [
     {
         title: () => <span>Название</span>,
         dataIndex: 'name',
-        key: 'contractNumber',
-        width: 305,
+        key: 'name',
         sorter: false,
         render: (text, record) => {
-            const substredText = text.length > 33 ? text.substr(0, 33) + '..' : text;
             return (
-                <Link title={text} to={'/orders/edit/' + record['number']}>{substredText}</Link>
+                <Link
+                    title={text}
+                    to={'/orders/edit/' + record['number']}
+                >
+                    {text}
+                </Link>
             );
         }
     },
@@ -52,23 +34,9 @@ const columns = [
         title: 'Заказчик',
         dataIndex: 'client',
         key: 'client',
-        width: 140,
+        width: 250,
         render: (client) => {
             const {name = ''} = client;
-            return name;
-        },
-        sorter: false
-    },
-    {
-        title: 'Менеджер',
-        dataIndex: 'manager',
-        key: 'manager',
-        width: 140,
-        render: (manager) => {
-            if (!manager) {
-                return '';
-            }
-            const {name = ''} = manager;
             return name;
         },
         sorter: false
@@ -77,9 +45,11 @@ const columns = [
         title: 'Организация',
         dataIndex: 'client',
         key: 'organization',
+        width: 180,
         render: (client) => {
             const {agent = ''} = client;
-            return agent;
+            const substredText = agent.length > 20 ? agent.substr(0, 20) + '..' : agent;
+            return <span title={agent}>{substredText}</span>;
         },
         style: {background:'red'},
         sorter: false
@@ -87,13 +57,20 @@ const columns = [
     {
         title: 'Статус',
         dataIndex: 'stateId',
-        width: 120,
+        width: 130,
         key: 'stateId',
         align: 'center',
         render: (stateId) => {
             const currentState = stateColors[stateId] || {};
             const {color = '', name = '', short = false} = currentState;
-            return <Tag title={name} style={{textTransform: 'uppercase', background:color}}>{short ? short : name}</Tag>;
+            const correctName = !name ? 'default' : name;
+            return (
+                <Tag
+                    title={correctName}
+                    style={{textTransform: 'uppercase', background:color}}
+                >
+                    {short ? short : correctName}
+                </Tag>);
         },
         sorter: false
     },
@@ -101,29 +78,62 @@ const columns = [
         title: 'Источник',
         dataIndex: 'source',
         key: 'source',
-        width: 85,
+        width: 130,
         align: 'center',
         render: (source) => {
             const {name = '', id = '0'} = source;
+            const correctName = !name ? 'default' : name;
             const currentBackground = sourceColors[id];
-            return <Tag title={name} style={{textTransform: 'uppercase', background:currentBackground}}>{name}</Tag>;
+            return (
+                <Tag
+                    title={correctName}
+                    style={{textTransform: 'uppercase', background:currentBackground}}
+                >
+                    {correctName}
+                </Tag>
+            );
         },
         sorter: false
     },
     {
-        title: () => <span title="Дата поступления">Поступление</span>,
+        title: () => <span title="Дата поступления">Поступл.</span>,
         dataIndex: 'createDate',
         key: 'createDate',
-        width: 95,
+        width: 100,
         align: 'center',
+        render: (dateValue) => {
+            if (!dateValue){
+                return '--.--.----';
+            }
+            const dateArray = dateValue.split('-');
+
+            return dateArray[2] + '.' + dateArray[1] + '.' + dateArray[0];
+        },
         sorter: false
     },
     {
-        title: () => <span title="Дата выполнения">Выполнение</span>,
-        dataIndex: 'completeDate',
-        key: 'completeDate',
-        width: 95,
-        align: 'center',
+        title: '№ контр.',
+        dataIndex: 'contractNumber',
+        key: 'contractNumber',
+        width: 105,
+        sorter: false,
+        render: (text) => {
+            const substredText = text.length > 12 ? text.substr(0, 12) + '..' : text;
+            return <span title={text}>{substredText}</span>;
+        },
+    },
+    {
+        title: 'М-жер',
+        dataIndex: 'manager',
+        key: 'manager',
+        width: 110,
+        render: (manager) => {
+            if (!manager) {
+                return '';
+            }
+            const {name = ''} = manager;
+            return name;
+        },
         sorter: false
     },
 ];
@@ -139,7 +149,8 @@ class Grid extends Component {
                 <Panel header="Заказы" key="1">
                     <Table
                         rowKey="key"
-                        bordered={true}
+                        size="small"
+                        bordered={false}
                         columns={columns}
                         dataSource={collection}
                         pagination={false}

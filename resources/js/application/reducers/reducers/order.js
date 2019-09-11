@@ -27,8 +27,7 @@ const initialState = {
         contractDate: null,
         paymentDate: null,
         actDate: null
-    },
-    scenes : []
+    }
 };
 
 export default function (state = initialState, action) {
@@ -37,16 +36,9 @@ export default function (state = initialState, action) {
 
         case actions.ORDER_SET_DATA:
 
-            const {
-                orderData = {},
-                scenes = []
-            } = action['payload'];
+            const { orderData = {} } = action['payload'];
 
-            return {
-                ...state,
-                orderData,
-                scenes
-            };
+            return { ...state, orderData };
 
         case actions.ORDER_SET_FORM_DATA:
             return { ...state, orderData: { ...state.orderData, ...action.payload} };
@@ -58,7 +50,7 @@ export default function (state = initialState, action) {
             return { ...state, disabled: action.payload };
         
         case actions.AOI_SET_LOADING:
-                return { ...state, isAoiLoading: action.payload };
+            return { ...state, isAoiLoading: action.payload };
 
         case actions.DIST_SET_DATA:
             return { ...state, distributors: action.payload };
@@ -67,10 +59,3 @@ export default function (state = initialState, action) {
             return state;
     }
 }
-
-export const setAOIData = (data) => {
-    return {
-        type: actions.AOI_SET_DIFFERENT_DATA,
-        payload: data
-    }
-};

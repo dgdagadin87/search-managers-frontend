@@ -164,7 +164,8 @@ class Grid extends Component {
                     title="AOI"
                 >
                     <div
-                        style={{height: '270px', maxHeight: '270px', overflowY:'scroll'}}>
+                        style={{height: '235px', maxHeight: '235px', overflowY:'scroll'}}
+                    >
                         <Table
                             size="small"
                             rowKey="id"

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -87,6 +89,12 @@ class AddCustomerModule extends Component {
         return this._renderBody();
     }
 
+};
+
+AddCustomerModule.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    customerData: PropTypes.object.isRequired,
+    saveHandler: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerModule);

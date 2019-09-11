@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+
+import PropTypes from 'prop-types';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -10,18 +12,20 @@ import {
 } from '../../../actions/common';
 import {
     asyncGetCustomers,
-    changeSearch
+    changeSearch,
+    changeOrg
 } from '../../../actions/customers';
 
 import PageHeader from 'antd/lib/page-header';
 import Input from 'antd/lib/input';
-import Row from 'antd/lib/row';
-import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
-import Spinner from '../../parts/Spinner';
+import Typography from 'antd/lib/typography';
 
+import Spinner from '../../parts/Spinner';
 import Table from '../../parts/Table';
 
+
+const { Paragraph } = Typography;
 
 const mapStateToProps = (state) => {
     return {
@@ -32,7 +36,8 @@ const mapStateToProps = (state) => {
         count: state.customersData.count,
         sortBy: state.customersData.sortBy,
         sortType: state.customersData.sortType,
-        searchString: state.customersData.searchString
+        searchString: state.customersData.searchString,
+        orgString: state.customersData.orgString
     };
 };
 
@@ -40,6 +45,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         changeTitle,
         changeSearch,
+        changeOrg,
         asyncGetCustomers
     }, dispatch);
 }
@@ -53,11 +59,11 @@ class CustomersModule extends Component {
 
         if (data === false) {
 
-            const { page, sortBy, sortType, searchString } = this.props;
+            const { page, sortBy, sortType, searchString, orgString } = this.props;
 
             asyncGetCustomers(
                 {sortBy, sortType},
-                {searchString},
+                {searchString, orgString},
                 {page}
             );
         }
@@ -71,22 +77,22 @@ class CustomersModule extends Component {
         const {asyncGetCustomers} = this.props;
         const {field: sortBy = false, order: sortType = false} = sorter;
         const {current: page = 1} = pagination;
-        const { searchString = '' } = this.props;
+        const { searchString = '', orgString = '' } = this.props;
 
         asyncGetCustomers(
             {sortBy, sortType},
-            {searchString},
+            {searchString, orgString},
             {page}
         );
     }
 
     _onSearch(){
 
-        const { page, sortBy, sortType, searchString, asyncGetCustomers } = this.props;
+        const { page, sortBy, sortType, searchString, orgString, asyncGetCustomers } = this.props;
 
         asyncGetCustomers(
             {sortBy, sortType},
-            {searchString},
+            {searchString, orgString},
             {page}
         );
     }
@@ -99,36 +105,49 @@ class CustomersModule extends Component {
         changeSearch(value);
     }
 
+    _onOrgChange(ev) {
+
+        const {changeOrg} = this.props;
+        const {target: {value = ''}} = ev;
+
+        changeOrg(value);
+    }
+
     _renderTableFilter() {
 
         const Search = Input.Search;
-        const {history, searchString = ''} = this.props;
+        const {searchString = '', orgString = ''} = this.props;
 
         return (
-            <Row>
-                <Col span={4}>
-                    <Button
-                        style={{width:'210px'}}
-                        type="primary"
-                        onClick={() => history.push('/customers/addcustomer')}
-                    >Добавить заказчика</Button>
-                </Col>
-                <Col span={20}>
-                    <Search
-                        placeholder="Поиск заказчиков по имени, номеру телефона, электронной почты, названию организации, адресу"
-                        enterButton={true}
-                        size="default"
-                        allowClear={true}
-                        onSearch={this._onSearch.bind(this)}
-                        onChange={this._onSearchChange.bind(this)}
-                        value={searchString}
-                    />
-                </Col>
-            </Row>
+            <Fragment>
+                <Search
+                    style={{width: '640px'}}
+                    placeholder="Поиск заказчиков по имени"
+                    enterButton={true}
+                    size="default"
+                    allowClear={true}
+                    onSearch={this._onSearch.bind(this)}
+                    onChange={this._onSearchChange.bind(this)}
+                    value={searchString}
+                />
+                <Search
+                    style={{width: '640px', marginLeft: '10px'}}
+                    placeholder="Поиск заказчиков по названию организации"
+                    enterButton={true}
+                    size="default"
+                    allowClear={true}
+                    onSearch={this._onSearch.bind(this)}
+                    onChange={this._onOrgChange.bind(this)}
+                    value={orgString}
+                />
+            </Fragment>
         );
     }
 
     _renderTable() {
+
+        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false} = this.props;
+        const correctData = data === false ? [] : data;
 
         const columns = [
             {
@@ -137,13 +156,15 @@ class CustomersModule extends Component {
                 key: 'name',
                 width: 205,
                 sorter: true,
+                sortOrder: sortBy === 'name' && sortType,
                 render: (text, record) => {
+
                     return (
                         <Link
                             title={text}
                             to={'/customers/edit/' + record['id']}
                         >
-                            {text}
+                            {text || 'Имя отсутствует'}
                         </Link>
                     );
                 }
@@ -154,7 +175,12 @@ class CustomersModule extends Component {
                 key: 'address',
                 sorter: false,
                 render: (text) => {
-                    const substredText = text.length > 100 ? text.substr(0, 100) + '....' : text;
+
+                    if (!text) {
+                        return <Paragraph>Адрес отсутствует</Paragraph>
+                    }
+
+                    const substredText = text.length > 150 ? text.substr(0, 150) + '....' : text;
                     return (
                         <span title={text}>{substredText}</span>
                     );
@@ -164,44 +190,54 @@ class CustomersModule extends Component {
                 title: 'Организация',
                 dataIndex: 'agent',
                 key: 'agent',
-                width: 305,
-                sorter: true
+                width: 155,
+                sorter: true,
+                sortOrder: sortBy === 'agent' && sortType,
             },
             {
                 title: 'Телефон',
                 dataIndex: 'phone',
                 key: 'phone',
                 width: 170,
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'phone' && sortType,
+                render: (text) => {
+
+                    if (!text) {
+                        return '_(___)___-__-__';
+                    }
+                    
+                    return text;
+                }
             },
             {
                 title: 'Должность',
                 dataIndex: 'position',
                 key: 'position',
                 width: 200,
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'position' && sortType,
             },
             {
                 title: 'Электронная почта',
                 dataIndex: 'email',
                 key: 'email',
                 width: 200,
-                sorter: true
+                sorter: true,
+                sortOrder: sortBy === 'email' && sortType,
             }
         ];
 
-        const {data = [], page = 1, count = 1, isLoading = false} = this.props;
-        const correctData = data === false ? [] : data;
-
         return (
             <Table
+                key="table"
                 rowKey={'id'}
                 loading={isLoading}
                 columns={columns}
                 dataSource={correctData}
                 bordered={false}
-                size="middle"
-                pagination={{current: page, total: count, pageSize: 20}}
+                size="small"
+                pagination={{current: page, total: count, pageSize: 100}}
                 title={() => this._renderTableFilter()}
                 onChange={this._onTableChange.bind(this)}
             />
@@ -211,14 +247,22 @@ class CustomersModule extends Component {
     _renderBody() {
 
         return (
-            <div className="order-list">
+            <Fragment>
                 <PageHeader
+                    key="header"
                     onBack={() => null}
                     title="Заказчики"
                     subTitle="Отображение списка заказчиков с возможностью фильтрации"
+                    extra={[
+                        <Button
+                            key="add"
+                            type="primary"
+                            onClick={() => this.props.history.push('/customers/addcustomer')}
+                        >Добавить заказчика</Button>
+                    ]}
                 />
                 {this._renderTable()}
-            </div>
+            </Fragment>
         );
     }
 
@@ -229,6 +273,17 @@ class CustomersModule extends Component {
         return isLoading && data === false ? <Spinner /> : this._renderBody();
     }
 
+};
+
+CustomersModule.propTypes = {
+    data: PropTypes.any.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    page: PropTypes.number.isRequired,
+    pages: PropTypes.number.isRequired,
+    count: PropTypes.number.isRequired,
+    sortBy: PropTypes.any.isRequired,
+    sortType: PropTypes.any.isRequired,
+    searchString: PropTypes.any
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomersModule);

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -23,6 +23,7 @@ import Button from 'antd/lib/button';
 import Select from 'antd/lib/select';
 import Message from 'antd/lib/message';
 import Notification from 'antd/lib/notification';
+import Typography from 'antd/lib/typography';
 
 import Spinner from '../../parts/Spinner';
 import ClientSelect from '../../parts/ClientsSelect';
@@ -32,6 +33,7 @@ import { uiSettings } from '../../../../config/settings';
 import { formatDate } from '../../../../core/coreUtils';
 
 import AOIGrid from './AOI/Grid';
+import ScenesGrid from './scenes/Grid';
 import DistributorsGrid from './distributors/Grid';
 
 const mapStateToProps = (state) => {
@@ -41,6 +43,7 @@ const mapStateToProps = (state) => {
         orderData: state.orderData.orderData,
         orgTypes: state.commonData.orgTypes,
         managers: state.commonData.managers,
+        applications: state.commonData.applications,
         orderStates: state.commonData.orderStates,
         orderSources: state.commonData.orderSources
     };
@@ -56,8 +59,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 const Option = Select.Option;
-const ButtonGroup = Button.Group;
 const { TextArea } = Input;
+const { Paragraph } = Typography;
 
 const fieldNames = {
     contactAmount: 'Сумма договора',
@@ -213,7 +216,7 @@ class OrderModule extends Component {
             <Select
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={String(manager)}
+                value={manager ? String(manager) : undefined}
                 style={{ width: uiSettings['editOrderFieldWidth'] }}
                 placeholder="Выберите менеджера"
                 onChange={this._onSelectValueChange.bind(this, 'manager')}
@@ -237,11 +240,12 @@ class OrderModule extends Component {
         const {orderData = {}, orderStates = [], disabled = false} = this.props;
         const {state = undefined} = orderData;
 
+
         return (
             <Select
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={state}
+                value={Number(state) === 0 ? undefined : state}
                 style={{ width: uiSettings['editOrderFieldWidth'] }}
                 placeholder="Выберите статус заказа"
                 onChange={this._onSelectValueChange.bind(this, 'state')}
@@ -288,6 +292,35 @@ class OrderModule extends Component {
         );
     }
 
+    _renderApplicationSelect(){
+
+        const {orderData = {}, applications = [], disabled = false} = this.props;
+        const {theme = undefined} = orderData;
+
+        return (
+            <Select
+                allowClear={true}
+                disabled={disabled}
+                size={uiSettings['fieldSize']}
+                value={Number(theme) === 0 ? undefined : theme}
+                style={{ width: uiSettings['editOrderFieldWidth'] }}
+                placeholder="Выберите тематику заказа"
+                onChange={this._onSelectValueChange.bind(this, 'theme')}
+            >
+                {applications.map(item => {
+                    return (
+                        <Option
+                            key={item['id']}
+                            value={String(item['id'])}
+                        >
+                            {item['name']}
+                        </Option>
+                    );
+                })}
+            </Select>
+        );
+    }
+
     _renderHeader() {
 
         const {orderData = {}, disabled = false} = this.props;
@@ -316,11 +349,6 @@ class OrderModule extends Component {
                     title={'Заказ №' + id}
                     subTitle={'Информация о выбранном заказе'}
                     extra={[
-                        <ButtonGroup key="0">
-                            <span>Путь к папке с файлами заказа</span>&nbsp;
-                            <Button disabled={true} key="1">{''}</Button>
-                            <Button key="2" onClick={this._onCopyHandler.bind(this)} type="primary">Скопировать</Button>
-                        </ButtonGroup>,
                         <Button
                             disabled={disabled || isDisabled}
                             key="1"
@@ -345,13 +373,13 @@ class OrderModule extends Component {
             createDate = null,
             completeDate = null,
             contractNumber = '',
-            theme = '',
             contractDate = null,
             accountNumber = '',
             paymentDate = null,
             actDate = null,
             valueAddedTax = null,
-            contactAmount = null
+            contactAmount = null,
+            dirPath = ''
         } = orderData;
 
         const isEmptyContractNumber = !contractNumber;
@@ -367,12 +395,22 @@ class OrderModule extends Component {
                     >
                         <Row>
                             <Col style={{paddingTop: '4px'}} span={9}>
+                                <span className="order-label">Путь к папке</span>
+                            </Col>
+                            <Col span={15}>
+                                {dirPath
+                                    ? <Paragraph strong={true} copyable>{dirPath}</Paragraph>
+                                    : <Paragraph disabled={true}>Отредактируйте заказ для создания папки</Paragraph>}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col style={{paddingTop: '4px'}} span={9}>
                                 <span className="order-label">Название заказа</span>
                                 <span className="strict">*</span>
                             </Col>
                             <Col span={15}>
                                 <Input
-                                    maxLength={25}
+                                    maxLength={50}
                                     disabled={disabled}
                                     size={uiSettings['fieldSize']}
                                     value={name}
@@ -454,15 +492,7 @@ class OrderModule extends Component {
                                 <span className="order-label">Тематика заказа</span>
                                 {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
-                            <Col span={15}>
-                                <Input
-                                    disabled={disabled}
-                                    size={uiSettings['fieldSize']}
-                                    value={theme}
-                                    onChange={this._onTextValueChange.bind(this, 'theme')}
-                                    placeholder="Введите тематику заказа"
-                                />
-                            </Col>
+                            <Col span={15}>{this._renderApplicationSelect()}</Col>
                         </Row>
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={9}>
@@ -611,6 +641,7 @@ class OrderModule extends Component {
                 </Col>
                 <Col span={15}>
                     <AOIGrid />
+                    <ScenesGrid />
                     <DistributorsGrid />
                 </Col>
             </Row>

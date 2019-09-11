@@ -33,7 +33,6 @@ import Tag from 'antd/lib/tag';
 
 import Table from '../../parts/Table';
 import Spinner from '../../parts/Spinner';
-import DatePicker from '../../parts/DatePicker';
 import { FromToPicker } from '../../parts/DatePicker';
 
 
@@ -72,38 +71,32 @@ function mapDispatchToProps(dispatch) {
 }
 
 const Option = Select.Option;
-const { RangePicker } = DatePicker;
+
+export const stateColors = {
+    '1': {name: 'Предварительный', color: '#E1E1FF', short: 'Предв.'},
+    '12': {name: 'Оформление договора', color: '#FBEC5D', short: 'Оформл. дог-ра'},
+    '2': {name: 'К оплате', color:'#FFE1E1'},
+    '7': {name: 'Оплачен, в обработке', color: '#FFEECC', short: 'Оплачен, в обр.'},
+    '3': {name: 'В работе', color: '#FFFFCC'},
+    '9': {name: 'Оформление акта', color: '#FBEC5D', short: 'Оформл. акта'},
+    '17': {name: 'В оплате по акту', color: '#FBEC5D', short: 'Опл. п/а'},
+    '6': {name: 'Оплачен, выполнен', color: '#D8FFD8', short: 'Опл., вып.'},
+    '8': {name: 'Выполнен без оплаты', color: '#CCCCCC', short: 'Выполнен, б/о'},
+    '4': {name: 'Выполнен', color: '#C8FFC8'},
+    '5': {name: 'Отменен', color: '#CCCCCC'},
+    '15': {name: 'Оплата по акту, в обработке', color: '#FFEECC', short: 'Опл. п/а, в обр.'},
+    '18': {name: 'Выполнен, задержка оплаты', color: '#FFFFCC', short: 'Выполнен, з/о'},
+}
+
+export const sourceColors = {
+    '3': '#AAFFAA',
+    '4': '#CCFFCC',
+    '1': '#FFAAAA',
+    '2': '#FFCCCC',
+    '5': '#DDDDFF'
+}
 
 class OrdersModule extends Component {
-
-    constructor(...props){
-
-        super(...props);
-
-        this._stateColors = {
-            '1': {name: 'Предварительный', color: '#E1E1FF', short: 'Предв.'},
-            '12': {name: 'Оформление договора', color: '#FBEC5D', short: 'Оформл. дог-ра'},
-            '2': {name: 'К оплате', color:'#FFE1E1'},
-            '7': {name: 'Оплачен, в обработке', color: '#FFEECC', short: 'Оплачен, в обр.'},
-            '3': {name: 'В работе', color: '#FFFFCC'},
-            '9': {name: 'Оформление акта', color: '#FBEC5D', short: 'Оформл. акта'},
-            '17': {name: 'В оплате по акту', color: '#FBEC5D', short: 'Опл. п/а'},
-            '6': {name: 'Оплачен, выполнен', color: '#D8FFD8', short: 'Опл., вып.'},
-            '8': {name: 'Выполнен без оплаты', color: '#CCCCCC', short: 'Выполнен, б/о'},
-            '4': {name: 'Выполнен', color: '#C8FFC8'},
-            '5': {name: 'Отменен', color: '#CCCCCC'},
-            '15': {name: 'Оплата по акту, в обработке', color: '#FFEECC', short: 'Опл. п/а, в обр.'},
-            '18': {name: 'Выполнен, задержка оплаты', color: '#FFFFCC', short: 'Выполнен, з/о'},
-        }
-
-        this._sourceColors = {
-            '3': '#AAFFAA',
-            '4': '#CCFFCC',
-            '1': '#FFAAAA',
-            '2': '#FFCCCC',
-            '5': '#DDDDFF'
-        }
-    }
 
     componentDidMount() {
 
@@ -491,7 +484,7 @@ class OrdersModule extends Component {
                 key: 'stateId',
                 align: 'center',
                 render: (stateId) => {
-                    const currentState = this._stateColors[stateId] || {};
+                    const currentState = stateColors[stateId] || {};
                     const {color = '', name = '', short = false} = currentState;
                     const correctName = !name ? 'default' : name;
                     return (
@@ -514,7 +507,7 @@ class OrdersModule extends Component {
                 render: (source) => {
                     const {name = '', id = '0'} = source;
                     const correctName = !name ? 'default' : name;
-                    const currentBackground = this._sourceColors[id];
+                    const currentBackground = sourceColors[id];
                     return (
                         <Tag
                             title={correctName}

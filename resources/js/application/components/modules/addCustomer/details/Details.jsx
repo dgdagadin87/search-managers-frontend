@@ -1,5 +1,7 @@
 import React, {Component, Fragment} from 'react';
 
+import PropTypes from 'prop-types';
+
 import Card from 'antd/lib/card';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -84,6 +86,13 @@ class Details extends Component {
         );
     }
 
+};
+
+Details.propTypes = {
+    onChangeState: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    customerData: PropTypes.object.isRequired,
+    orgTypes: PropTypes.array.isRequired
 };
 
 export default Details;
