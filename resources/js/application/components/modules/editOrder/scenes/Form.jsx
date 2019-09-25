@@ -8,18 +8,20 @@ import {
     setScenesData
 } from '../../../../actions/scenes';
 
+import { NETWORK_PATH } from '../../../../../config/settings';
+
 import Modal from 'antd/lib/Modal';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
-import Icon from 'antd/lib/icon';
 import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Message from 'antd/lib/message';
-import Upload from 'antd/lib/upload';
+import Typography from 'antd/lib/typography';
 import Notification from 'antd/lib/notification';
 
-const { Dragger } = Upload;
+const { TextArea } = Input;
+const { Paragraph } = Typography;
 
 const mapStateToProps = (state) => {
     return {
@@ -87,16 +89,6 @@ class ScenesForm extends Component {
         });
     }
 
-    _onSelectChange(source) {
-
-        this.props.setScenesData({
-            scenesData: {
-                ...this.props.scenesData,
-                source
-            }
-        });
-    }
-
     _onCancel () {
         
         const {setScenesData} = this.props;
@@ -114,12 +106,23 @@ class ScenesForm extends Component {
         const { files = [] } = scenesData;
 
         for (let index in scenesData) {
+
+            if (index === 'files') {
+                continue;
+            }
+
             if (scenesData[index]) {
                 formData.append(index, scenesData[index]);
             }
         }
 
-        files.forEach((file, index) => formData.append('file' + index, file));
+        files.forEach((file, index) => {
+
+            const { originFileObj = false } = file;
+            const correctFile = originFileObj ? originFileObj : file;
+
+            formData.append('file' + index, correctFile);
+        });
 
         formData.append('orderId', orderId);
         formData.append('clientId', client['id']);
@@ -128,6 +131,16 @@ class ScenesForm extends Component {
     }
 
     _onSelectChange(fieldName, value) {
+
+        if (fieldName === 'aoiId') {
+
+            const { scenesData = {} } = this.props;
+            const { id = false } = scenesData;
+
+            if (id) {
+                Message.warning('Изменилась папка для хранения файлов снимка', 10);
+            }
+        }
 
         this.props.setScenesData({
             scenesData: {
@@ -148,7 +161,7 @@ class ScenesForm extends Component {
 
     _isDisabled() {
 
-        const fields = ['name', 'course', 'partOfScene', 'handling', 'aoiId', 'dType', 'courseOfHandling'];
+        const fields = ['name', /*'course', 'partOfScene', 'handling',*/ 'aoiId'/*, 'dType', 'courseOfHandling'*/];
         const { scenesData = {} } = this.props;
         let result = false;
 
@@ -159,21 +172,18 @@ class ScenesForm extends Component {
             }
         }
 
-        if (scenesData['files'].length < 1) {
+        /*if (scenesData['files'].length < 1) {
             result = true;
-        }
+        }*/
 
         return result;
     }
 
-    _onUploadFiles(file) {
+    _onUploadFiles(info) {
 
-        const {files = []} = this.props.scenesData;
+        const {fileList = []} = info;
 
-        let newFiles = [ ...files ];
-        newFiles.push(file)
-
-        const newScenesData = { ...this.props.scenesData, files: newFiles };
+        const newScenesData = { ...this.props.scenesData, files: fileList };
 
         this.props.setScenesData({
             scenesData: newScenesData
@@ -284,8 +294,15 @@ class ScenesForm extends Component {
 
     render() {
 
-        const { visible = false, disabled = false, scenesData = {} } = this.props;
         const {
+            visible = false,
+            disabled = false,
+            scenesData = {},
+            orderData: { id:orderId = null, client = {} }
+        } = this.props;
+        
+        const {
+            aoiId = undefined,
             id = false,
             name = '',
             course = null,
@@ -298,6 +315,7 @@ class ScenesForm extends Component {
             courseOfHandling = null
         } = scenesData;
         const isButtonDisabled = this._isDisabled();
+        const dirPath = aoiId ? NETWORK_PATH + '\\orders\\Client_' + client['id'] + '\\Order_' + orderId + '\\ROI_' + aoiId : <span style={{color:'red'}}>AOI не выбрана</span>
 
         return (
             <Modal
@@ -323,37 +341,35 @@ class ScenesForm extends Component {
                     </Button>,
                 ]}
             >
-                <Row>
-                    <Col style={{paddingTop:'4px'}} span={24}>
-                        <Dragger
-                            name="file"
-                            multiple={true}
-                            beforeUpload={(file) => this._onUploadFiles(file)}
-                            showUploadList={false}
-                        >
-                            <p className="ant-upload-drag-icon">
-                                <Icon type="inbox" />
-                            </p>
-                            <p className="ant-upload-text">
-                                Нажмите или перетащите сюда файлы
-                            </p>
-                        </Dragger>
+                <Row style={{marginTop:'5px'}}>
+                    <Col style={{paddingTop:'4px', verticalAlign: 'middle'}} span={8}>
+                        <span className="order-label">
+                            Путь к AOI-папке
+                        </span>
                     </Col>
+                    <Col span={16}>{<Paragraph strong={true} copyable={aoiId ? true : false}>{dirPath}</Paragraph>}</Col>
                 </Row>
-                <Row style={{marginTop:'15px'}}>
-                    <Col style={{paddingTop:'4px'}} span={8}>
+                <Row style={{marginTop:'5px'}}>
+                    <Col style={{paddingTop:'4px', verticalAlign: 'middle'}} span={8}>
                         <span className="order-label">
                             Название снимка
                             <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>
+                        {id === false ? <TextArea
+                            disabled={disabled}
+                            value={name}
+                            onChange={(e) => this._onTextValueChange(e, 'name')}
+                            placeholder="Введите название снимка(ов)"
+                            style={{ height: 85 }}
+                        /> :
                         <Input
                             disabled={disabled}
                             value={name}
                             onChange={(e) => this._onTextValueChange(e, 'name')}
                             placeholder="Введите название снимка"
-                        />
+                        />}
                     </Col>
                 </Row>
                 <Row style={{marginTop:'5px'}}>
@@ -369,7 +385,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             Курс снимка
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>
@@ -385,7 +400,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             Тип снимка
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>{this._renderDTypeSelect()}</Col>
@@ -394,7 +408,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             Часть сцены
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>{this._renderScenePartSelect()}</Col>
@@ -455,7 +468,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             Обработка
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>{this._renderHandlingSelect()}</Col>
@@ -490,7 +502,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             Курс обработки
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>

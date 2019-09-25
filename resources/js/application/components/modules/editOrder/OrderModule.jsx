@@ -614,13 +614,13 @@ class OrderModule extends Component {
                                 <span className="order-label">Запрос</span>
                             </Col>
                             <Col span={15}>
-                            <TextArea
-                                disabled={disabled}
-                                onChange={this._onTextValueChange.bind(this, 'request')}
-                                value={request}
-                                placeholder="Введите запрос"
-                                style={{ height: 85 }}
-                            />
+                                <TextArea
+                                    disabled={disabled}
+                                    onChange={this._onTextValueChange.bind(this, 'request')}
+                                    value={request}
+                                    placeholder="Введите запрос"
+                                    style={{ height: 85 }}
+                                />
                             </Col>
                         </Row>
                         <Row style={uiSettings['labelStyle']}>

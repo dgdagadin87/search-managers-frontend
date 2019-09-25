@@ -101,6 +101,38 @@ class Grid extends Component {
 
         const columns = [
             {
+                title: '',
+                align: 'center',
+                dataIndex: 'rowPanel',
+                width: 90,
+                render: (text, record) => {
+
+                    return (
+                        <span>
+                            <Button
+                                size="small"
+                                type="primary"
+                                title="Редактировать"
+                                className="distributors-button"
+                                onClick={() => this._onEditHandler(record)}
+                            >
+                                <Icon type="edit" theme="filled" />
+                            </Button>
+                            &nbsp;&nbsp;&nbsp;
+                            <Button
+                                size="small"
+                                type="primary"
+                                title="Удалить"
+                                className="distributors-button"
+                                onClick={() => this._onDeleteHandler(record)}
+                            >
+                                <Icon type="delete" theme="filled" />
+                            </Button>
+                        </span>
+                    );
+                }
+            },
+            {
                 title: 'Аккаунт',
                 dataIndex: 'account',
                 width: 150
@@ -156,38 +188,6 @@ class Grid extends Component {
                 dataIndex: 'price',
                 width: 100,
                 align: 'center'
-            },
-            {
-                title: '',
-                align: 'center',
-                dataIndex: 'rowPanel',
-                width: 90,
-                render: (text, record) => {
-
-                    return (
-                        <span>
-                            <Button
-                                size="small"
-                                type="primary"
-                                title="Редактировать"
-                                className="distributors-button"
-                                onClick={() => this._onEditHandler(record)}
-                            >
-                                <Icon type="edit" theme="filled" />
-                            </Button>
-                            &nbsp;&nbsp;&nbsp;
-                            <Button
-                                size="small"
-                                type="primary"
-                                title="Удалить"
-                                className="distributors-button"
-                                onClick={() => this._onDeleteHandler(record)}
-                            >
-                                <Icon type="delete" theme="filled" />
-                            </Button>
-                        </span>
-                    );
-                }
             }
         ];
 

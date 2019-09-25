@@ -26,6 +26,8 @@ const urlSettings = {
     'editOrder': '/api/orders/edit',
     'scenes': '/api/scenes/list',
     'addScene': '/api/scenes/add',
+    'editScene': '/api/scenes/edit',
+    'getScene': '/api/scenes/get',
     'addDistributor': '/Home/AddDistributor',
     'editDistributor': '/Home/EditDistributor',
     'getDistributors': '/Home/GetDistributors',
@@ -38,7 +40,9 @@ const urlSettings = {
     'customer': '/api/customers/get',
     'addCustomer': '/Home/AddCustomer',
     'editCustomer': '/Home/EditCustomer',
-    'autocompleteCustomers': '/Home/AutocompleteCustomers'
+    'autocompleteCustomers': '/api/autocomplete/customers'
 };
 
-export {defaultSettings, uiSettings, pageSettings, urlSettings};
+const NETWORK_PATH = '\\\\lsync\\sync';
+
+export {defaultSettings, uiSettings, pageSettings, urlSettings, NETWORK_PATH};

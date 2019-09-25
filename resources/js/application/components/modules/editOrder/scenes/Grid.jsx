@@ -7,7 +7,8 @@ import {bindActionCreators} from 'redux';
 
 import {
     asyncGetScenes,
-    setScenesData
+    setScenesData,
+    asyncGetSceneForEdit
 } from '../../../../actions/scenes';
 
 import Card from 'antd/lib/card';
@@ -30,7 +31,8 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         asyncGetScenes,
-        setScenesData
+        setScenesData,
+        asyncGetSceneForEdit
     }, dispatch);
 }
 
@@ -65,10 +67,18 @@ class Grid extends Component {
 
         this.props.setScenesData({
             visible: true,
+            disabled: false,
             scenesData: {
                 ...emptyFormData
             }
         });
+    }
+
+    _onEditHandler(record) {
+
+        const {id = null} = record;
+
+        this.props.asyncGetSceneForEdit(id, emptyFormData);
     }
 
     render() {
@@ -76,6 +86,37 @@ class Grid extends Component {
         const {scenes = [], isLoading = false} = this.props;
 
         const columns = [
+            {
+                title: '',
+                align: 'center',
+                dataIndex: 'loadButton',
+                width: 100,
+                render: (text, record) => {
+                    return (
+                        <span>
+                            <Button
+                                size="small"
+                                type="primary"
+                                title="Редактировать"
+                                className="distributors-button"
+                                onClick={() => this._onEditHandler(record)}
+                            >
+                                <Icon type="edit" theme="filled" />
+                            </Button>
+                            &nbsp;
+                            <Button
+                                size="small"
+                                type="primary"
+                                title="Удалить"
+                                className="distributors-button"
+                                //onClick={() => this._onDeleteHandler(record)}
+                            >
+                                <Icon type="delete" theme="filled" />
+                            </Button>
+                        </span>
+                    );
+                }
+            },
             {
                 title: 'Название',
                 dataIndex: 'sceneId',
@@ -145,40 +186,9 @@ class Grid extends Component {
             },
             {
                 title: 'Курс обр.',
-                dataIndex: 'HandlingRate',
+                dataIndex: 'handlingRate',
                 width: 100,
                 align: 'center'
-            },
-            {
-                title: '',
-                align: 'center',
-                dataIndex: 'loadButton',
-                width: 100,
-                render: (text, record) => {
-                    return (
-                        <span>
-                            <Button
-                                size="small"
-                                type="primary"
-                                title="Редактировать"
-                                className="distributors-button"
-                                //onClick={() => this._onEditHandler(record)}
-                            >
-                                <Icon type="edit" theme="filled" />
-                            </Button>
-                            &nbsp;
-                            <Button
-                                size="small"
-                                type="primary"
-                                title="Удалить"
-                                className="distributors-button"
-                                //onClick={() => this._onDeleteHandler(record)}
-                            >
-                                <Icon type="delete" theme="filled" />
-                            </Button>
-                        </span>
-                    );
-                }
             }
         ];
 
