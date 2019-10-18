@@ -95,7 +95,7 @@ export const asyncEditOrder = (dataToSend, showError) => {
                 return;
             }
 
-            dispatch({ type: actions['ORDERS_SET_DEFAULT'], payload: null }); // TODO
+            dispatch({ type: actions['ORDERS_UPDATE_ROW'], payload: null });
 
             Message.success('Заказ успешно отредактирован', 3);
         })
@@ -120,5 +120,18 @@ export const setEditOrderData = (data) => {
     return {
         type: actions.ORDER_SET_FORM_DATA,
         payload: data
+    }
+};
+
+export const addOrderForCustomer = (customerData, history, events) => {
+    const {id, name} = customerData;
+
+    history.push('/orders/addorder');
+
+    events.trigger('changeMenuTab', 'orders');
+
+    return {
+        type: actions.ADD_ORDER_SET_DATA,
+        payload: { client: {id, name} }
     }
 };

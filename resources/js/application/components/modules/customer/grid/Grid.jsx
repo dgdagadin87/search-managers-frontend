@@ -5,6 +5,10 @@ import {Link} from 'react-router-dom';
 import Collapse from 'antd/lib/collapse';
 import Tag from 'antd/lib/tag';
 
+import {
+    formatDate
+} from '../../../../../core/coreUtils';
+
 import Table from '../../../parts/Table';
 
 import stateColors from '../../orders/OrdersModule';
@@ -105,9 +109,8 @@ const columns = [
             if (!dateValue){
                 return '--.--.----';
             }
-            const dateArray = dateValue.split('-');
-
-            return dateArray[2] + '.' + dateArray[1] + '.' + dateArray[0];
+            
+            return formatDate(dateValue, true);
         },
         sorter: false
     },

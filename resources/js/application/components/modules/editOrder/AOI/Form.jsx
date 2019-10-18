@@ -85,9 +85,13 @@ class AOIForm extends Component {
 
         const {name = ''} = file;
 
+        const nameArray = name.split('.');
+        const newName = nameArray[0] || '';
+
         this.props.setAOIData({
             aoiData: {
                 ...this.props.aoiData,
+                region: newName,
                 fileName: name,
                 currentFile: file
             }

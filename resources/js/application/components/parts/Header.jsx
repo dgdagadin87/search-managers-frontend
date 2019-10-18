@@ -13,6 +13,10 @@ class Header extends Component {
 
         super(props);
 
+        this._events = props.globalEvents;
+
+        this._events.on('changeMenuTab', (key) => this.setState({ current: key }) );
+
         const menuCodes = [
             'orders',
             'customers',
@@ -21,7 +25,8 @@ class Header extends Component {
             'links'
         ];
         const {pathname: pathName = ''} = window.location;
-        const correctPathName = pathName.replace('/', '');
+
+        //const correctPathName = pathName.replace('/', '');
         let currentMenuItem = false;
         
         menuCodes.forEach((item) => {
@@ -30,10 +35,12 @@ class Header extends Component {
                 return;
             }
 
-            if (correctPathName === item){
+            const re = new RegExp(item);
+
+            if (re.test(pathName)){
                 currentMenuItem = item;
             }
-            else if(correctPathName === '') {
+            else if(pathName === '/') {
                 currentMenuItem = 'orders';
             }
         });

@@ -39,7 +39,7 @@ class Details extends Component {
                                     className="details-card"
                                     style={{marginRight:'10px'}}
                                     size="small"
-                                    title="Детали заказа"
+                                    title="Детали заказчика"
                                 >
                                     <Form
                                         disabled={disabled}

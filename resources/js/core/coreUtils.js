@@ -24,7 +24,7 @@ function createUrl (settings, url) {
     //return url;
 }
 
-function formatDate(date) {
+function formatDate(date, forShow = false) {
 
     const dateFormat = 'DD.MM.YYYY';
     let correctDate = !date ? {} : date;
@@ -36,6 +36,10 @@ function formatDate(date) {
     const correctDay = correctDate['day'] < 10 ? String('0' + correctDate['day']) : String(correctDate['day']);
     const correctMonth = correctDate['month'] < 10 ? String('0' + correctDate['month']) : String(correctDate['month']);
     const correctYear = String(correctDate['year']);
+
+    if (forShow) {
+        return correctDay + '.' + correctMonth + '.' + correctYear;
+    }
 
     return moment(correctDay + '.' + correctMonth + '.' + correctYear, dateFormat);
 }

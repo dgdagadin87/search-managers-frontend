@@ -12,6 +12,7 @@ import {
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
+import Notification from 'antd/lib/notification';
 
 import Table from '../../../parts/Table';
 
@@ -50,6 +51,16 @@ class Grid extends Component {
         this._onAddHandler = this._onAddHandler.bind(this);
         this._onDeleteHandler = this._onDeleteHandler.bind(this);
         this._onEditHandler = this._onEditHandler.bind(this);
+        this._showError = this._showError.bind(this);
+    }
+
+    _showError(errorText) {
+
+        Notification['error']({
+            message: 'Ошибка',
+            description: errorText,
+            duration: 0
+        });
     }
 
     _onAddHandler() {
@@ -81,28 +92,13 @@ class Grid extends Component {
         }
 
         if (id) {
-            asyncDeleteAOI(id, orderId, clientId);
+            asyncDeleteAOI(id, orderId, clientId, this._showError);
         }
     }
 
     render() {
 
         const columns = [
-            {
-                title: 'Область',
-                dataIndex: 'region',
-                width: 170
-            },
-            {
-                title: 'Наименование файла',
-                dataIndex: 'fileName',
-                render: (text) => {
-                    const substredText = text.length > 55 ? text.substr(0, 53) + '..' : text;
-                    return (
-                        <span title={text}>{substredText}</span>
-                    );
-                }
-            },
             {
                 title: 'Операции',
                 align: 'center',
@@ -149,6 +145,21 @@ class Grid extends Component {
                                 <Icon type="delete" theme="filled" />
                             </Button>
                         </span>
+                    );
+                }
+            },
+            {
+                title: 'Область',
+                dataIndex: 'region',
+                width: 170
+            },
+            {
+                title: 'Наименование файла',
+                dataIndex: 'fileName',
+                render: (text) => {
+                    const substredText = text.length > 55 ? text.substr(0, 53) + '..' : text;
+                    return (
+                        <span title={text}>{substredText}</span>
                     );
                 }
             }

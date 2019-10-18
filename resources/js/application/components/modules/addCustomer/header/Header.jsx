@@ -15,6 +15,13 @@ class Header extends Component {
         saveHandler();
     }
 
+    _onAddOrderHandler() {
+
+        const {customerData = {}, history, addOrderHandler} = this.props;
+
+        addOrderHandler(customerData, history);
+    }
+
     render() {
 
         const {disabled = false, customerData = {}} = this.props;
@@ -23,14 +30,15 @@ class Header extends Component {
         return (
             <div ref={this.mainRef}>
                 <PageHeader
-                    onBack={() => null}
+                    onBack={() => window.history.back()}
                     title={id ? name : 'Новый заказчик'}
                     subTitle={!id ? 'Добавление нового заказчика' : 'Информация о выбранном заказчике'}
                     extra={[
                         id ? <Button
                                 key="0"
-                                type="danger"
-                            >Удалить заказчика</Button> : null,
+                                type="primary"
+                                onClick={this._onAddOrderHandler.bind(this)}
+                            >Добавить заказ</Button> : null,
                         <Button
                             key="1"
                             disabled={disabled || !customerData['name']}
@@ -46,9 +54,11 @@ class Header extends Component {
 };
 
 Header.propTypes = {
+    history: PropTypes.any,
     disabled: PropTypes.bool.isRequired,
     customerData: PropTypes.object.isRequired,
-    saveHandler: PropTypes.func.isRequired
+    saveHandler: PropTypes.func.isRequired,
+    addOrderHandler: PropTypes.func
 };
 
 export default Header;

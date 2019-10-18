@@ -14,6 +14,10 @@ import {
     setEditCustomerData
 } from '../../../actions/customer';
 
+import {
+    addOrderForCustomer
+} from '../../../actions/order';
+
 import Header from '../addCustomer/header/Header';
 import Details from '../addCustomer/details/Details';
 import Grid from './grid/Grid';
@@ -36,7 +40,8 @@ function mapDispatchToProps(dispatch) {
         changeTitle,
         asyncGetCustomer,
         asyncSaveCustomer,
-        setEditCustomerData
+        setEditCustomerData,
+        addOrderForCustomer
     }, dispatch);
 }
 
@@ -59,6 +64,13 @@ class CustomerModule extends Component {
         this.props.asyncSaveCustomer(customerData);
     }
 
+    _onAddOrderHandler(customerData, history) {
+
+        const {globalEvents} = this.props;
+
+        this.props.addOrderForCustomer(customerData, history, globalEvents);
+    }
+
     _onChangeDataHandler(data) {
 
         const { setEditCustomerData, customerData = {} } = this.props;
@@ -69,16 +81,18 @@ class CustomerModule extends Component {
 
     _renderBody() {
 
-        const {match, collection = [], customerData = {}, orgTypes = [], disabled = false} = this.props;
+        const {match, collection = [], customerData = {}, orgTypes = [], disabled = false, history} = this.props;
         const {params} = match;
         const {id} = params;
 
         return (
             <Fragment>
                 <Header
+                    history={history}
                     disabled={disabled}
                     customerData={customerData}
                     saveHandler={this._onSaveHandler.bind(this)}
+                    addOrderHandler={this._onAddOrderHandler.bind(this)}
                 />
                 <Details
                     disabled={disabled}

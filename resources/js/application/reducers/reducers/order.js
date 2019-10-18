@@ -1,6 +1,8 @@
 import actions from '../../../config/actions';
 import { formatRawDate } from '../../../core/coreUtils';
 
+import {NETWORK_PATH} from '../../../config/settings';
+
 
 const correctCreateDate = formatRawDate(new Date());
 
@@ -13,9 +15,9 @@ const initialState = {
         comment: '',
         request: '',
         xstatus: '',
-        manager: undefined,
-        state: undefined,
-        source: undefined,
+        managerId: undefined,
+        stateId: undefined,
+        sourceId: undefined,
         client: {},
         theme: '',
         contractNumber: '',
@@ -26,7 +28,9 @@ const initialState = {
         completeDate: null,
         contractDate: null,
         paymentDate: null,
-        actDate: null
+        actDate: null,
+        dirPath: null,
+        dirPathShort: null
     }
 };
 
@@ -49,13 +53,27 @@ export default function (state = initialState, action) {
         case actions.ORDER_SET_DISABLED:
             return { ...state, disabled: action.payload };
         
-        case actions.AOI_SET_LOADING:
+        /*case actions.AOI_SET_LOADING:
             return { ...state, isAoiLoading: action.payload };
 
         case actions.DIST_SET_DATA:
-            return { ...state, distributors: action.payload };
+            return { ...state, distributors: action.payload };*/
+
+        case actions.ORDERS_UPDATE_ROW:
+            return { ...state, orderData: updateOrderData(state['orderData']) };
 
         default:
             return state;
     }
 }
+
+const updateOrderData = (orderData) => {
+
+    const {client = {}, id:orderId} = orderData;
+    const {id:clientId} = client;
+
+    const dirPath = NETWORK_PATH + '\\orders\\Client_' + clientId + '\\Order_' + orderId;
+    const dirPathShort = '\\orders\\Client_' + clientId + '\\Order_' + orderId;
+
+    return { ...orderData, dirPath, dirPathShort };
+};

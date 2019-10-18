@@ -28,6 +28,44 @@ export const asyncGetScenes = (orderId) => {
     }
 };
 
+export const asyncDeleteScene = (id, orderId) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['SCENES_SET_LOADING'], payload: true });
+
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['deleteScene']),
+            data: { id }
+        })
+        .then( () => {
+
+            return Request.send({
+                url: createUrl(defaultSettings, urlSettings['scenes']),
+                data: { orderId }
+            })
+        })
+        .then( (data) => {
+
+            if (!data) {
+                return;
+            }
+
+            const {collection = []} = data;
+
+            dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });
+            dispatch({ type: actions['SCENES_SET_DATA'], payload: collection });
+        })
+        .catch((error) => {
+            dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
 export const asyncSaveScene = (orderId, formData, id, showError) => {
 
     return dispatch => {

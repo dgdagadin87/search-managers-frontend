@@ -94,7 +94,7 @@ class AddCustomerModule extends Component {
 AddCustomerModule.propTypes = {
     disabled: PropTypes.bool.isRequired,
     customerData: PropTypes.object.isRequired,
-    saveHandler: PropTypes.func.isRequired
+    saveHandler: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerModule);

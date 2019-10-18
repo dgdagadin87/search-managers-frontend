@@ -8,7 +8,8 @@ import {bindActionCreators} from 'redux';
 import {
     asyncGetScenes,
     setScenesData,
-    asyncGetSceneForEdit
+    asyncGetSceneForEdit,
+    asyncDeleteScene
 } from '../../../../actions/scenes';
 
 import Card from 'antd/lib/card';
@@ -22,6 +23,7 @@ import Form from './Form';
 
 const mapStateToProps = (state) => {
     return {
+        orderData: state.orderData.orderData,
         isLoading: state.scenesData.isLoading,
         scenes: state.scenesData.scenes,
         scenesData: state.scenesData.scenesData
@@ -32,7 +34,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         asyncGetScenes,
         setScenesData,
-        asyncGetSceneForEdit
+        asyncGetSceneForEdit,
+        asyncDeleteScene
     }, dispatch);
 }
 
@@ -81,6 +84,21 @@ class Grid extends Component {
         this.props.asyncGetSceneForEdit(id, emptyFormData);
     }
 
+    _onDeleteHandler(record) {
+
+        const {id} = record;
+        const {asyncDeleteScene, orderData = {}} = this.props;
+        const {id:orderId = null} = orderData;
+
+        if (!confirm('Вы действительно хотите удалить выбранную запись?')) {
+            return;
+        }
+
+        if (id) {
+            asyncDeleteScene(id, orderId);
+        }
+    }
+
     render() {
 
         const {scenes = [], isLoading = false} = this.props;
@@ -109,7 +127,7 @@ class Grid extends Component {
                                 type="primary"
                                 title="Удалить"
                                 className="distributors-button"
-                                //onClick={() => this._onDeleteHandler(record)}
+                                onClick={() => this._onDeleteHandler(record)}
                             >
                                 <Icon type="delete" theme="filled" />
                             </Button>

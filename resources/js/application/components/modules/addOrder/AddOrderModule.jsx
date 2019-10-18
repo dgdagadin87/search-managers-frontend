@@ -95,7 +95,7 @@ class AddOrderModule extends Component {
             contractDate = null,
             paymentDate = null,
             actDate = null,
-            source = undefined,
+            sourceId = undefined,
             client = {}
         } = orderData;
 
@@ -106,7 +106,7 @@ class AddOrderModule extends Component {
             contractDate: transformDate(contractDate),
             paymentDate: transformDate(paymentDate),
             actDate: transformDate(actDate),
-            source: source || 0,
+            sourceId: sourceId || 0,
             client: client['id'] || null
         };
 
@@ -184,16 +184,16 @@ class AddOrderModule extends Component {
     _renderManagersSelect(){
 
         const {orderData = {}, managers = [], disabled = false} = this.props;
-        const {manager = undefined} = orderData;
+        const {managerId = undefined} = orderData;
 
         return (
             <Select
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={manager}
+                value={managerId}
                 style={{ width: uiSettings['formFieldWidth'] }}
                 placeholder="Выберите менеджера"
-                onChange={this._onSelectValueChange.bind(this, 'manager')}
+                onChange={this._onSelectValueChange.bind(this, 'managerId')}
             >
                 {managers.map(item => {
                     return (
@@ -241,17 +241,17 @@ class AddOrderModule extends Component {
     _renderOrderStateSelect(){
 
         const {orderData = {}, orderStates = [], disabled = false} = this.props;
-        const {state = undefined} = orderData;
+        const {stateId = undefined} = orderData;
 
         return (
             <Select
                 allowClear={true}
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={state}
+                value={stateId}
                 style={{ width: uiSettings['formFieldWidth'] }}
                 placeholder="Выберите статус заказа"
-                onChange={this._onSelectValueChange.bind(this, 'state')}
+                onChange={this._onSelectValueChange.bind(this, 'stateId')}
             >
                 {orderStates.map(item => {
                     return (
@@ -270,17 +270,17 @@ class AddOrderModule extends Component {
     _renderOrderSourceSelect(){
 
         const {orderData = {}, orderSources = [], disabled = false} = this.props;
-        const {source = undefined} = orderData;
+        const {sourceId = undefined} = orderData;
 
         return (
             <Select
                 allowClear={true}
                 size={uiSettings['fieldSize']}
-                value={source}
+                value={sourceId}
                 disabled={disabled}
                 style={{ width: uiSettings['formFieldWidth'] }}
                 placeholder="Выберите источник заказа"
-                onChange={this._onSelectValueChange.bind(this, 'source')}
+                onChange={this._onSelectValueChange.bind(this, 'sourceId')}
             >
                 {orderSources.map(item => {
                     return (
@@ -302,23 +302,15 @@ class AddOrderModule extends Component {
         const {
             name = '',
             createDate = null,
-            contractNumber = '',
-            theme = '',
-            state = undefined,
-            manager = undefined,
-            client = {},
-            contractDate = null,
-            accountNumber = null
+            stateId = undefined,
+            managerId = undefined,
+            client = {}
         } = orderData;
-        const isEmptyContractNumber = !contractNumber;
-        let isDisabled = !name || !createDate || !state || !manager || !client || !client.hasOwnProperty('id');
-        if (!isEmptyContractNumber) {
-            isDisabled = !theme || !contractDate || !accountNumber;
-        }
+        let isDisabled = !name || !createDate || !String(stateId) || !String(managerId) || !client || !client.hasOwnProperty('id');
 
         return (
             <PageHeader
-                onBack={() => history.push('/orders')}
+                onBack={() => window.history.back()}
                 title={'Новый заказ'}
                 subTitle={'Добавление нового заказа'}
                 extra={[
@@ -354,8 +346,6 @@ class AddOrderModule extends Component {
             valueAddedTax = null,
             contactAmount = null
         } = orderData;
-
-        const isEmptyContractNumber = !contractNumber;
 
         return (
             <Row>
@@ -451,7 +441,6 @@ class AddOrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={7}>
                                 <span className="order-label">Тематика заказа</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={17}>{this._renderApplicationSelect()}</Col>
                         </Row>
@@ -473,7 +462,6 @@ class AddOrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={7}>
                                 <span className="order-label">Дата договора</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={17}>
                                 <DatePicker
@@ -488,7 +476,6 @@ class AddOrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={7}>
                                 <span className="order-label">Номер счета</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={17}>
                             <Input

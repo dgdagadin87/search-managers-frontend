@@ -69,7 +69,7 @@ export const asyncSaveAOI = (formData, id, orderId) => {
     }
 };
 
-export const asyncDeleteAOI = (id, orderId, clientId) => {
+export const asyncDeleteAOI = (id, orderId, clientId, showError) => {
 
     return dispatch => {
 
@@ -79,7 +79,15 @@ export const asyncDeleteAOI = (id, orderId, clientId) => {
             url: createUrl(defaultSettings, urlSettings['deleteAOI']),
             data: { id, orderId, clientId }
         })
-        .then( () => {
+        .then( (data) => {
+
+            const {isError = false, errorMessage = ''} = data;
+
+            if (isError) {
+                dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
+                showError(errorMessage);
+                return;
+            }
 
             return Request.send({
                 url: createUrl(defaultSettings, urlSettings['getAOI']),
@@ -87,6 +95,10 @@ export const asyncDeleteAOI = (id, orderId, clientId) => {
             })
         })
         .then( (data) => {
+
+            if (!data) {
+                return;
+            }
 
             dispatch({ type: actions['AOI_SET_LOADING'], payload: false });
             dispatch({ type: actions['AOI_SET_DATA'], payload: data });

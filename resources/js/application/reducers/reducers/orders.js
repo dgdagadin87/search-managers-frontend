@@ -45,7 +45,10 @@ export default function (state = initialState, action) {
             return { ...state, isLoading: action.payload };
 
         case actions.ORDERS_SET_DEFAULT:
-            return { ...initialState };
+            return { ...state, collection: false, page: 1 };
+
+        case actions.ORDERS_UPDATE_ROW:
+            return { ...state, collection: false };
 
         default:
             return state;

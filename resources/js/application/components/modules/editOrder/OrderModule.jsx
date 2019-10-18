@@ -121,7 +121,7 @@ class OrderModule extends Component {
             contractDate = null,
             paymentDate = null,
             actDate = null,
-            source = undefined,
+            sourceId = undefined,
             client = {}
         } = orderData;
 
@@ -132,7 +132,7 @@ class OrderModule extends Component {
             contractDate: transformDate(contractDate),
             paymentDate: transformDate(paymentDate),
             actDate: transformDate(actDate),
-            source: source || 0,
+            sourceId: sourceId || 0,
             client: client['id'] || null
         };
 
@@ -210,16 +210,16 @@ class OrderModule extends Component {
     _renderManagersSelect(){
 
         const {orderData = {}, managers = [], disabled = false} = this.props;
-        const {manager = undefined} = orderData;
+        const {managerId = undefined} = orderData;
 
         return (
             <Select
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={manager ? String(manager) : undefined}
+                value={managerId ? String(managerId) : undefined}
                 style={{ width: uiSettings['editOrderFieldWidth'] }}
                 placeholder="Выберите менеджера"
-                onChange={this._onSelectValueChange.bind(this, 'manager')}
+                onChange={this._onSelectValueChange.bind(this, 'managerId')}
             >
                 {managers.map(item => {
                     return (
@@ -238,17 +238,17 @@ class OrderModule extends Component {
     _renderOrderStateSelect(){
 
         const {orderData = {}, orderStates = [], disabled = false} = this.props;
-        const {state = undefined} = orderData;
+        const {stateId = undefined} = orderData;
 
 
         return (
             <Select
                 disabled={disabled}
                 size={uiSettings['fieldSize']}
-                value={Number(state) === 0 ? undefined : state}
+                value={Number(stateId) === 0 || !stateId ? undefined : String(stateId)}
                 style={{ width: uiSettings['editOrderFieldWidth'] }}
                 placeholder="Выберите статус заказа"
-                onChange={this._onSelectValueChange.bind(this, 'state')}
+                onChange={this._onSelectValueChange.bind(this, 'stateId')}
             >
                 {orderStates.map(item => {
                     return (
@@ -267,16 +267,16 @@ class OrderModule extends Component {
     _renderOrderSourceSelect(){
 
         const {orderData = {}, orderSources = [], disabled = false} = this.props;
-        const {source = undefined} = orderData;
+        const {sourceId = undefined} = orderData;
 
         return (
             <Select
                 size={uiSettings['fieldSize']}
-                value={String(source)}
+                value={String(sourceId)}
                 disabled={disabled}
                 style={{ width: uiSettings['editOrderFieldWidth'] }}
                 placeholder="Выберите источник заказа"
-                onChange={this._onSelectValueChange.bind(this, 'source')}
+                onChange={this._onSelectValueChange.bind(this, 'sourceId')}
             >
                 {orderSources.map(item => {
                     return (
@@ -328,24 +328,17 @@ class OrderModule extends Component {
             id = null,
             name = '',
             createDate = null,
-            contractNumber = '',
-            theme = '',
-            state = undefined,
-            manager = undefined,
-            client = {},
-            contractDate = null,
-            accountNumber = null
+            stateId = undefined,
+            sourceId = undefined,
+            managerId = undefined,
+            client = {}
         } = orderData;
-        const isEmptyContractNumber = !contractNumber;
-        let isDisabled = !name || !createDate || !state || !manager || !client || !client.hasOwnProperty('id');
-        if (!isEmptyContractNumber) {
-            isDisabled = !theme || !contractDate || !accountNumber;
-        }
+        let isDisabled = !name || !createDate || !String(sourceId) || !String(stateId) || !String(managerId) || !client || !client.hasOwnProperty('id');
 
         return (
             <div ref={this.mainRef}>
                 <PageHeader
-                    onBack={() => null}
+                    onBack={() => window.history.back()}
                     title={'Заказ №' + id}
                     subTitle={'Информация о выбранном заказе'}
                     extra={[
@@ -379,10 +372,9 @@ class OrderModule extends Component {
             actDate = null,
             valueAddedTax = null,
             contactAmount = null,
-            dirPath = ''
+            dirPath = '',
+            dirPathShort = ''
         } = orderData;
-
-        const isEmptyContractNumber = !contractNumber;
 
         return (
             <Row className="edit-order">
@@ -399,7 +391,7 @@ class OrderModule extends Component {
                             </Col>
                             <Col span={15}>
                                 {dirPath
-                                    ? <Paragraph strong={true} copyable>{dirPath}</Paragraph>
+                                    ? <Paragraph strong={true} copyable={{text: dirPath}}>{dirPathShort}</Paragraph>
                                     : <Paragraph disabled={true}>Отредактируйте заказ для создания папки</Paragraph>}
                             </Col>
                         </Row>
@@ -490,7 +482,6 @@ class OrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={9}>
                                 <span className="order-label">Тематика заказа</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={15}>{this._renderApplicationSelect()}</Col>
                         </Row>
@@ -512,7 +503,6 @@ class OrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={9}>
                                 <span className="order-label">Дата договора</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={15}>
                                 <DatePicker
@@ -527,7 +517,6 @@ class OrderModule extends Component {
                         <Row style={uiSettings['labelStyle']}>
                             <Col style={{paddingTop: '4px'}} span={9}>
                                 <span className="order-label">Номер счета</span>
-                                {isEmptyContractNumber ? null : <span className="strict">*</span>}
                             </Col>
                             <Col span={15}>
                             <Input

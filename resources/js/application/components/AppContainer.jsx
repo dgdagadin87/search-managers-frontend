@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 
 import Header from './parts/Header';
 
+import Events from '../../core/events';
+
 import OrdersModule from './modules/orders/OrdersModule';
 import OrderModule from './modules/editOrder/OrderModule';
 import AddOrderModule from './modules/addOrder/AddOrderModule';
@@ -19,6 +21,8 @@ const mapStateToProps = (state) => {
     };
 };
 
+const globalEvents = new Events();
+
 class AppContainer extends Component {
 
     render () {
@@ -28,24 +32,24 @@ class AppContainer extends Component {
         return (
             <div className="main-container">
                 <div className="main-center">
-                    <Header user={userData} />
+                    <Header user={userData} globalEvents={globalEvents} />
                     <div className="main-content">
                         <Switch>
                             <Route path="/customers">
                                 <Switch>
-                                    <Route path="/customers/edit/:id" render={ (props) => <CustomerModule {...props} /> } />
-                                    <Route path="/customers/addcustomer" render={ (props) => <AddCustomerModule {...props} /> } />
-                                    <Route exact path="/customers" render={ (props) => <CustomersModule {...props} /> } />
+                                    <Route path="/customers/edit/:id" render={ (props) => <CustomerModule {...props} globalEvents={globalEvents} /> } />
+                                    <Route path="/customers/addcustomer" render={ (props) => <AddCustomerModule {...props} globalEvents={globalEvents} /> } />
+                                    <Route exact path="/customers" render={ (props) => <CustomersModule {...props} globalEvents={globalEvents} /> } />
                                 </Switch>
                             </Route>
                             <Route path="/orders">
                                 <Switch>
-                                    <Route path="/orders/edit/:id" render={ (props) => <OrderModule {...props} /> } />
-                                    <Route path="/orders/addorder" render={ (props) => <AddOrderModule {...props} /> } />
-                                    <Route exact path="/orders" render={ (props) => <OrdersModule {...props} /> } />
+                                    <Route path="/orders/edit/:id" render={ (props) => <OrderModule {...props} globalEvents={globalEvents} /> } />
+                                    <Route path="/orders/addorder" render={ (props) => <AddOrderModule {...props} globalEvents={globalEvents} /> } />
+                                    <Route exact path="/orders" render={ (props) => <OrdersModule {...props} globalEvents={globalEvents} /> } />
                                 </Switch>
                             </Route>
-                            <Route exact path="/" render={ (props) => <OrdersModule {...props} /> } />
+                            <Route exact path="/" render={ (props) => <OrdersModule {...props} globalEvents={globalEvents} /> } />
                         </Switch>
                     </div>
                 </div>

@@ -23,6 +23,7 @@ import Typography from 'antd/lib/typography';
 
 import Spinner from '../../parts/Spinner';
 import Table from '../../parts/Table';
+import Icon from 'antd/lib/icon';
 
 
 const { Paragraph } = Typography;
@@ -113,6 +114,14 @@ class CustomersModule extends Component {
         changeOrg(value);
     }
 
+    _onEditHandler(record) {
+
+        const {history} = this.props;
+        const {id = ''} = record;
+
+        history.push('/customers/edit/' + id);
+    }
+
     _renderTableFilter() {
 
         const Search = Input.Search;
@@ -146,10 +155,31 @@ class CustomersModule extends Component {
 
     _renderTable() {
 
-        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false} = this.props;
+        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false, globalEvents} = this.props;
         const correctData = data === false ? [] : data;
 
         const columns = [
+            {
+                title: '',
+                align: 'center',
+                dataIndex: 'loadButton',
+                width: 65,
+                render: (text, record) => {
+                    return (
+                        <span>
+                            <Button
+                                size="small"
+                                type="primary"
+                                title="Редактировать"
+                                className="distributors-button"
+                                onClick={() => this._onEditHandler(record)}
+                            >
+                                <Icon type="edit" theme="filled" />
+                            </Button>
+                        </span>
+                    );
+                }
+            },
             {
                 title: () => <span>Заказчик</span>,
                 dataIndex: 'name',
@@ -163,6 +193,7 @@ class CustomersModule extends Component {
                         <Link
                             title={text}
                             to={'/customers/edit/' + record['id']}
+                            onClick={() => globalEvents.trigger('changeMenuTab', 'orders')}
                         >
                             {text || 'Имя отсутствует'}
                         </Link>
@@ -190,7 +221,7 @@ class CustomersModule extends Component {
                 title: 'Организация',
                 dataIndex: 'agent',
                 key: 'agent',
-                width: 155,
+                width: 210,
                 sorter: true,
                 sortOrder: sortBy === 'agent' && sortType,
             },
@@ -222,7 +253,7 @@ class CustomersModule extends Component {
                 title: 'Электронная почта',
                 dataIndex: 'email',
                 key: 'email',
-                width: 200,
+                width: 250,
                 sorter: true,
                 sortOrder: sortBy === 'email' && sortType,
             }
@@ -250,7 +281,7 @@ class CustomersModule extends Component {
             <Fragment>
                 <PageHeader
                     key="header"
-                    onBack={() => null}
+                    onBack={() => window.history.back()}
                     title="Заказчики"
                     subTitle="Отображение списка заказчиков с возможностью фильтрации"
                     extra={[

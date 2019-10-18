@@ -380,7 +380,7 @@ class OrdersModule extends Component {
                     className="custom-select"
                     size={'default'}
                     value={correctSource}
-                    style={{width:'180px', marginLeft:'10px'}}
+                    style={{width:'178px', marginLeft:'10px'}}
                     placeholder="Выберите источник"
                     onChange={this._onSelectSourceChange.bind(this)}
                 >
@@ -401,7 +401,7 @@ class OrdersModule extends Component {
                     className="custom-select"
                     size={'default'}
                     value={correctManager}
-                    style={{width:'180px', marginLeft:'10px'}}
+                    style={{width:'178px', marginLeft:'10px'}}
                     placeholder="Выберите менеджера"
                     onChange={this._onSelectManagerChange.bind(this)}
                 >
@@ -530,9 +530,8 @@ class OrdersModule extends Component {
                     if (!dateValue){
                         return '--.--.----';
                     }
-                    const dateArray = dateValue.split('-');
-
-                    return dateArray[2] + '.' + dateArray[1] + '.' + dateArray[0];
+                    
+                    return formatDate(dateValue, true);
                 },
                 sorter: true,
                 sortOrder: sortBy === 'createDate' && sortType
@@ -585,7 +584,7 @@ class OrdersModule extends Component {
         return (
             <div className="order-list">
                 <PageHeader
-                    onBack={() => null}
+                    onBack={() => window.history.back()}
                     title="Заказы"
                     subTitle="Отображение списка заказов с возможностью фильтрации"
                     extra={[

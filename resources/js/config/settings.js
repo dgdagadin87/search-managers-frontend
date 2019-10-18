@@ -19,30 +19,31 @@ const pageSettings = {
 };
 
 const urlSettings = {
-    'common': '/Home/Common',
+    'common': '/api/common/main',
     'orders': '/api/orders/list',
-    'order': '/Home/Order',
+    'order': '/api/orders/get',
     'addOrder': '/api/orders/add',
     'editOrder': '/api/orders/edit',
     'scenes': '/api/scenes/list',
     'addScene': '/api/scenes/add',
     'editScene': '/api/scenes/edit',
     'getScene': '/api/scenes/get',
-    'addDistributor': '/Home/AddDistributor',
-    'editDistributor': '/Home/EditDistributor',
-    'getDistributors': '/Home/GetDistributors',
-    'deleteDistributor': '/Home/DeleteDistributor',
-    'getAOI': '/Home/GetAOI',
-    'addAOI': '/Home/AddAOI',
-    'editAOI': '/Home/EditAOI',
-    'deleteAOI': '/Home/DeleteAOI',
+    'deleteScene': '/api/scenes/delete',
+    'getDistributors': '/api/distributors/list',
+    'addDistributor': '/api/distributors/add',
+    'editDistributor': '/api/distributors/edit',
+    'deleteDistributor': '/api/distributors/delete',
+    'getAOI': '/api/aoi/list',
+    'addAOI': '/api/aoi/add',
+    'editAOI': '/api/aoi/edit',
+    'deleteAOI': '/api/aoi/delete',
     'customers': '/api/customers/list',
     'customer': '/api/customers/get',
-    'addCustomer': '/Home/AddCustomer',
-    'editCustomer': '/Home/EditCustomer',
+    'addCustomer': '/api/customers/add',
+    'editCustomer': '/api/customers/edit',
     'autocompleteCustomers': '/api/autocomplete/customers'
 };
 
-const NETWORK_PATH = '\\\\lsync\\sync';
+const NETWORK_PATH = '\\\\lsync.scanex.ru\\sync';
 
 export {defaultSettings, uiSettings, pageSettings, urlSettings, NETWORK_PATH};

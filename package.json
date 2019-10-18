@@ -37,6 +37,7 @@
     "redux-devtools-extension": "latest",
     "redux-logger": "latest",
     "redux-thunk": "latest",
-    "style-loader": "latest"
+    "style-loader": "latest",
+    "underscore": "^1.9.1"
   }
 }

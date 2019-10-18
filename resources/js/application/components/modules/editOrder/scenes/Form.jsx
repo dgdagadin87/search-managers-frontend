@@ -315,7 +315,7 @@ class ScenesForm extends Component {
             courseOfHandling = null
         } = scenesData;
         const isButtonDisabled = this._isDisabled();
-        const dirPath = aoiId ? NETWORK_PATH + '\\orders\\Client_' + client['id'] + '\\Order_' + orderId + '\\ROI_' + aoiId : <span style={{color:'red'}}>AOI не выбрана</span>
+        const dirPath = aoiId ? '\\orders\\Client_' + client['id'] + '\\Order_' + orderId + '\\ROI_' + aoiId : <span style={{color:'red'}}>AOI не выбрана</span>
 
         return (
             <Modal
@@ -347,7 +347,7 @@ class ScenesForm extends Component {
                             Путь к AOI-папке
                         </span>
                     </Col>
-                    <Col span={16}>{<Paragraph strong={true} copyable={aoiId ? true : false}>{dirPath}</Paragraph>}</Col>
+                    <Col span={16}>{<Paragraph strong={true} copyable={aoiId ? {text: NETWORK_PATH + dirPath} : false}>{dirPath}</Paragraph>}</Col>
                 </Row>
                 <Row style={{marginTop:'5px'}}>
                     <Col style={{paddingTop:'4px', verticalAlign: 'middle'}} span={8}>
