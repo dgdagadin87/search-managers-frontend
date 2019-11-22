@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -161,7 +163,7 @@ class ScenesForm extends Component {
 
     _isDisabled() {
 
-        const fields = ['name', /*'course', 'partOfScene', 'handling',*/ 'aoiId'/*, 'dType', 'courseOfHandling'*/];
+        const fields = ['name', /*'course', 'partOfScene', 'handling', 'aoiId', 'dType', 'courseOfHandling'*/];
         const { scenesData = {} } = this.props;
         let result = false;
 
@@ -315,7 +317,7 @@ class ScenesForm extends Component {
             courseOfHandling = null
         } = scenesData;
         const isButtonDisabled = this._isDisabled();
-        const dirPath = aoiId ? '\\orders\\Client_' + client['id'] + '\\Order_' + orderId + '\\ROI_' + aoiId : <span style={{color:'red'}}>AOI не выбрана</span>
+        const dirPath = '\\orders\\Client_' + client['id'] + '\\Order_' + orderId + '\\ROI_' + (aoiId ? aoiId : 'DEFAULT');
 
         return (
             <Modal
@@ -347,7 +349,9 @@ class ScenesForm extends Component {
                             Путь к AOI-папке
                         </span>
                     </Col>
-                    <Col span={16}>{<Paragraph strong={true} copyable={aoiId ? {text: NETWORK_PATH + dirPath} : false}>{dirPath}</Paragraph>}</Col>
+                    <Col span={16}>
+                        {<Paragraph strong={true} copyable={{text: NETWORK_PATH + dirPath}}>{dirPath}</Paragraph>}
+                    </Col>
                 </Row>
                 <Row style={{marginTop:'5px'}}>
                     <Col style={{paddingTop:'4px', verticalAlign: 'middle'}} span={8}>
@@ -376,7 +380,6 @@ class ScenesForm extends Component {
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
                             AOI снимка
-                            <span className="strict">*</span>
                         </span>
                     </Col>
                     <Col span={16}>{this._renderAOISelect()}</Col>
@@ -517,6 +520,18 @@ class ScenesForm extends Component {
         );
     }
 
+};
+
+ScenesForm.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
+    scenes: PropTypes.array.isRequired,
+    scenesData: PropTypes.object.isRequired,
+    orderData: PropTypes.object.isRequired,
+    aoi: PropTypes.array.isRequired,
+    dTypes: PropTypes.array.isRequired,
+    sceneParts: PropTypes.array.isRequired,
+    prodTypes: PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScenesForm);

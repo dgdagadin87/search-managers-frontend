@@ -155,7 +155,7 @@ class CustomersModule extends Component {
 
     _renderTable() {
 
-        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false, globalEvents} = this.props;
+        const {data = [], page = 1, count = 1, isLoading = false, sortBy = false, sortType = false} = this.props;
         const correctData = data === false ? [] : data;
 
         const columns = [
@@ -193,7 +193,6 @@ class CustomersModule extends Component {
                         <Link
                             title={text}
                             to={'/customers/edit/' + record['id']}
-                            onClick={() => globalEvents.trigger('changeMenuTab', 'orders')}
                         >
                             {text || 'Имя отсутствует'}
                         </Link>

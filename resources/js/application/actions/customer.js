@@ -98,6 +98,32 @@ export const asyncAddCustomer = (dataToSend, history) => {
     }
 };
 
+export const asyncRegisterUser = (dataToSend) => {
+
+    return dispatch => {
+
+        dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: true });
+
+        Request.send({
+            url: createUrl(defaultSettings, urlSettings['registerUser']),
+            data: dataToSend
+        })
+        .then( () => {
+
+            dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
+
+            Message.success('Пользователь успешно зарегистрирован на Космоснимках', 3);
+        })
+        .catch((error) => {
+            dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
+            console.log('error', error);
+            const {message, statusText} = error;
+            const errorMessage = statusText ? statusText : message;
+            alert(errorMessage);
+        });
+    }
+};
+
 export const setEditCustomerData = (data) => {
     return {
         type: actions.CUSTOMER_SET_DATA,

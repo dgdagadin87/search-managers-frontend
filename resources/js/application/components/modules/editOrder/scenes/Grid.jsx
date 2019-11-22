@@ -26,7 +26,8 @@ const mapStateToProps = (state) => {
         orderData: state.orderData.orderData,
         isLoading: state.scenesData.isLoading,
         scenes: state.scenesData.scenes,
-        scenesData: state.scenesData.scenesData
+        scenesData: state.scenesData.scenesData,
+        scenesSums: state.scenesData.scenesSums
     };
 };
 
@@ -65,7 +66,7 @@ class Grid extends Component {
 
         this._onAddHandler = this._onAddHandler.bind(this);
     }
-
+    
     _onAddHandler() {
 
         this.props.setScenesData({
@@ -99,6 +100,26 @@ class Grid extends Component {
         }
     }
 
+    _renderSums() {
+
+        const {scenesSums: {
+            scenesCost = 0,
+            squaresCost = 0,
+            handling = 0,
+            sum = 0,
+            orderSum = 0
+        }} = this.props;
+
+        return (
+            <Fragment>
+                Стоимость сцен (руб): <strong>{scenesCost}</strong><br />
+                Стоимость площ. (руб): <strong>{squaresCost}</strong><br />
+                Обработка (руб): <strong>{handling}</strong><br />
+                Сумма (руб): <strong>{sum}</strong>
+            </Fragment>
+        )
+    }
+
     render() {
 
         const {scenes = [], isLoading = false} = this.props;
@@ -109,6 +130,7 @@ class Grid extends Component {
                 align: 'center',
                 dataIndex: 'loadButton',
                 width: 100,
+                fixed: 'left',
                 render: (text, record) => {
                     return (
                         <span>
@@ -218,23 +240,19 @@ class Grid extends Component {
                     title="Снимки"
                     style={{marginTop: '10px'}}
                 >
-                    <div style={{ maxWidth: '1100px', overflow: 'scroll', maxHeight: '238px'}}>
-                        <div
-                            style={{width: '1100px',height: '238px'}}
-                        >
-                            <Table
-                                sampleEmpty={true}
-                                size="small"
-                                loading={isLoading}
-                                rowKey="id"
-                                bordered={true}
-                                columns={columns}
-                                dataSource={scenes}
-                                pagination={false}
-                                title={() => <Button onClick={this._onAddHandler} type="primary">Добавить снимок</Button>}
-                            />
-                        </div>
-                    </div>
+                    <Table
+                        sampleEmpty={true}
+                        scroll={{ x: 1200, y: 150 }}
+                        size="small"
+                        loading={isLoading}
+                        rowKey="id"
+                        bordered={true}
+                        columns={columns}
+                        dataSource={scenes}
+                        pagination={false}
+                        title={() => <Button onClick={this._onAddHandler} type="primary">Добавить снимок</Button>}
+                        footer={() => this._renderSums()}
+                    />
                 </Card>
             </Fragment>
         );

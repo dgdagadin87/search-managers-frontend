@@ -1,5 +1,7 @@
 import React, {Component, Fragment} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -31,6 +33,7 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         asyncGetAOI,
         asyncDeleteAOI,
+        asyncDeleteAOI2: (paramsObj) => dispatch({type: 'AOI_DELETE_SAGA', payload: paramsObj}),
         setAOIData
     }, dispatch);
 }
@@ -84,7 +87,7 @@ class Grid extends Component {
     _onDeleteHandler(record) {
 
         const {id} = record;
-        const {asyncDeleteAOI, orderData = {}} = this.props;
+        const {asyncDeleteAOI2, orderData = {}} = this.props;
         const {id:orderId = null, client: {id:clientId = null}} = orderData;
 
         if (!confirm('Вы действительно хотите удалить выбранную запись?')) {
@@ -92,7 +95,8 @@ class Grid extends Component {
         }
 
         if (id) {
-            asyncDeleteAOI(id, orderId, clientId, this._showError);
+            //asyncDeleteAOI(id, orderId, clientId, this._showError);
+            asyncDeleteAOI2({id, orderId, clientId, showError: this._showError});
         }
     }
 
@@ -104,6 +108,7 @@ class Grid extends Component {
                 align: 'center',
                 dataIndex: 'loadButton',
                 width: 165,
+                fixed: 'left',
                 render: (text, record) => {
                     return (
                         <span>
@@ -174,25 +179,29 @@ class Grid extends Component {
                     size="small"
                     title="AOI"
                 >
-                    <div
-                        style={{height: '235px', maxHeight: '235px', overflowY:'scroll'}}
-                    >
-                        <Table
-                            size="small"
-                            rowKey="id"
-                            loading={isLoading}
-                            bordered={true}
-                            columns={columns}
-                            dataSource={aoi}
-                            pagination={false}
-                            title={() => (<Button onClick={this._onAddHandler} type="primary">Добавить AOI</Button>)}
-                        />
-                    </div>
+                    <Table
+                        sampleEmpty={true}
+                        size="small"
+                        rowKey="id"
+                        loading={isLoading}
+                        bordered={true}
+                        columns={columns}
+                        dataSource={aoi}
+                        pagination={false}
+                        scroll={{ y: 150 }}
+                        title={() => (<Button onClick={this._onAddHandler} type="primary">Добавить AOI</Button>)}
+                    />
                 </Card>
             </Fragment>
         );
     }
 
+};
+
+Grid.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+    aoi: PropTypes.array.isRequired,
+    orderData: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Grid);

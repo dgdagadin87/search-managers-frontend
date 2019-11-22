@@ -10,7 +10,7 @@ export const asyncGetScenes = (orderId) => {
         dispatch({ type: actions['SCENES_SET_LOADING'], payload: true });
         
         Request.send({
-            url: createUrl(defaultSettings, urlSettings['getScenes']),
+            url: createUrl(defaultSettings, urlSettings['scenes']),
             data: { orderId }
         })
         .then( (data) => {
@@ -51,10 +51,10 @@ export const asyncDeleteScene = (id, orderId) => {
                 return;
             }
 
-            const {collection = []} = data;
+            const {collection = [], scenesSums = {}} = data;
 
             dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });
-            dispatch({ type: actions['SCENES_SET_DATA'], payload: collection });
+            dispatch({ type: actions['SCENES_SET_DATA'], payload: { scenes: collection, scenesSums } });
         })
         .catch((error) => {
             dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });
@@ -109,10 +109,10 @@ export const asyncSaveScene = (orderId, formData, id, showError) => {
                 return;
             }
 
-            const {collection = []} = data;
+            const {collection = [], scenesSums = {}} = data;
 
             dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });
-            dispatch({ type: actions['SCENES_SET_DATA'], payload: collection });
+            dispatch({ type: actions['SCENES_SET_DATA'], payload: { scenes: collection, scenesSums } });
         })
         .catch((error) => {
             dispatch({ type: actions['SCENES_SET_LOADING'], payload: false });

@@ -11,6 +11,7 @@ import {
 import {
     asyncGetCustomer,
     asyncSaveCustomer,
+    asyncRegisterUser,
     setEditCustomerData
 } from '../../../actions/customer';
 
@@ -40,6 +41,7 @@ function mapDispatchToProps(dispatch) {
         changeTitle,
         asyncGetCustomer,
         asyncSaveCustomer,
+        asyncRegisterUser,
         setEditCustomerData,
         addOrderForCustomer
     }, dispatch);
@@ -79,6 +81,13 @@ class CustomerModule extends Component {
         setEditCustomerData(correctCustomerData);
     }
 
+    _onRegisterHandler() {
+
+        const { asyncRegisterUser, customerData:{id = false, email = ''}} = this.props;
+
+        asyncRegisterUser({ id, email });
+    }
+
     _renderBody() {
 
         const {match, collection = [], customerData = {}, orgTypes = [], disabled = false, history} = this.props;
@@ -99,11 +108,13 @@ class CustomerModule extends Component {
                     orgTypes={orgTypes}
                     customerData={customerData}
                     onChangeState={this._onChangeDataHandler.bind(this)}
+                    onRegister={this._onRegisterHandler.bind(this)}
                 />
                 <Grid
                     customerId={id}
                     collection={collection}
                     customerData={customerData}
+                    globalEvents={this.props.globalEvents}
                 />
             </Fragment>
         );

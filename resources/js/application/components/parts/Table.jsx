@@ -19,7 +19,9 @@ export default class Grid extends Component {
             className = '',
             size = 'middle',
             onChange = null,
-            sampleEmpty = false
+            sampleEmpty = false,
+            footer = null,
+            scroll = {}
         } = this.props;
 
         return (
@@ -31,8 +33,10 @@ export default class Grid extends Component {
                 dataSource={dataSource}
                 pagination={pagination}
                 title={title}
+                footer={footer}
                 className={className}
                 size={size}
+                scroll={scroll}
                 onChange={onChange}
                 locale={{ emptyText: sampleEmpty ? 'Нет данных для отображения' : <Empty description="Нет данных для отображения" /> }}
             />

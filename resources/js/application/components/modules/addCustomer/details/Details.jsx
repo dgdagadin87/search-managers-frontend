@@ -46,6 +46,7 @@ class Details extends Component {
                                         orgTypes={orgTypes}
                                         customerData={customerData}
                                         onChangeState={this.props.onChangeState}
+                                        onRegister={this.props.onRegister}
                                     />
                                 </Card>
                             </Col>
@@ -90,6 +91,7 @@ class Details extends Component {
 
 Details.propTypes = {
     onChangeState: PropTypes.func.isRequired,
+    onRegister: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     customerData: PropTypes.object.isRequired,
     orgTypes: PropTypes.array.isRequired

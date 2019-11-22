@@ -41,7 +41,9 @@ const urlSettings = {
     'customer': '/api/customers/get',
     'addCustomer': '/api/customers/add',
     'editCustomer': '/api/customers/edit',
-    'autocompleteCustomers': '/api/autocomplete/customers'
+    'autocompleteCustomers': '/api/autocomplete/customers',
+    'createDefaultAoi': '/api/service/add/dir/aoi',
+    'registerUser': '/api/service/add/user/kosmosnimki'
 };
 
 const NETWORK_PATH = '\\\\lsync.scanex.ru\\sync';

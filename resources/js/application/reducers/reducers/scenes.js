@@ -21,6 +21,13 @@ const initialState = {
         dType: undefined,
         files: []
     },
+    scenesSums: {
+        scenesCost: 0,
+        squaresCost: 0,
+        handling: 0,
+        sum: 0,
+        orderSum: 0
+    },
     scenes: []
 };
 
@@ -29,8 +36,8 @@ export default function (state = initialState, action) {
     switch (action.type) {
 
         case actions.ORDER_SET_DATA:
-            const { scenes = [] } = action['payload'];
-            return { ...state, scenes };
+            const { scenes = [], scenesSums = {} } = action['payload'];
+            return { ...state, scenes, scenesSums };
         
         case actions.SCENES_SET_LOADING:
             return { ...state, isLoading: action.payload };
@@ -39,7 +46,7 @@ export default function (state = initialState, action) {
             return { ...state, disabled: action.payload };
 
         case actions.SCENES_SET_DATA:
-            return { ...state, scenes: action.payload };
+            return { ...state, ...action.payload };
 
         case actions.SCENES_SET_DIFFERENT_DATA:
             return { ...state, ...action.payload };

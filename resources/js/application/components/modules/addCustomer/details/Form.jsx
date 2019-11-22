@@ -6,6 +6,8 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
+import Button from 'antd/lib/button';
+import Popover from 'antd/lib/popover';
 
 import { uiSettings } from '../../../../../config/settings';
 
@@ -13,6 +15,44 @@ import { uiSettings } from '../../../../../config/settings';
 const Option = Select.Option;
 
 class Form extends Component {
+
+    constructor(props) {
+
+        super(props);
+
+        this.state = { isVisible: false };
+    }
+
+    _hide () {
+
+        this.setState({
+            isVisible: false,
+        });
+    }
+
+    _handleVisibleChange (isVisible) {
+        
+        const {customerData:{isRegistered = false}} = this.props;
+        let visible = false;
+
+        if (isRegistered) {
+            visible = isVisible;
+        }
+
+        this.setState({ isVisible: visible });
+    }
+
+    _onRegisterClick() {
+
+        const {customerData:{isRegistered = false}} = this.props;
+
+        if (isRegistered) {
+
+            return;
+        }
+
+        this.props.onRegister();
+    }
 
     _onSelectChange(orgType) {
 
@@ -61,6 +101,7 @@ class Form extends Component {
 
         const {disabled = false, customerData = {}} = this.props;
         const {
+            id = false,
             name = '',
             address = '',
             position = '',
@@ -70,7 +111,10 @@ class Form extends Component {
             fax = '',
             email = '',
             email2 = '',
-            homePage = ''
+            homePage = '',
+            isRegistered = false,
+            regName = '',
+            regPass = ''
         } = customerData;
 
         return (
@@ -193,7 +237,24 @@ class Form extends Component {
                             value={email}
                             onChange={(e) => this._onTextValueChange(e, 'email')}
                             placeholder="Введите электронную почту"
+                            style={id ? {width: '314px', marginRight: '5px'} : {}}
                         />
+                        {id ? <Popover
+                            content={<Fragment>
+                                {'Пользователь'}<br />
+                                {'Password'}<br />
+                                <a onClick={this._hide.bind(this)}>Закрыть</a>
+                            </Fragment>}
+                            title="Реквизиты"
+                            trigger="click"
+                            visible={this.state.isVisible}
+                            onVisibleChange={this._handleVisibleChange.bind(this)}
+                        >
+                            <Button
+                                onClick={this._onRegisterClick.bind(this)}
+                                icon={isRegistered ? 'eye' : 'user-add'}
+                            />
+                        </Popover> : null}
                     </Col>
                 </Row>
                 <Row style={uiSettings['labelStyle']}>
@@ -232,6 +293,7 @@ class Form extends Component {
 
 Form.propTypes = {
     onChangeState: PropTypes.func.isRequired,
+    onRegister: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     customerData: PropTypes.object.isRequired,
     orgTypes: PropTypes.array.isRequired

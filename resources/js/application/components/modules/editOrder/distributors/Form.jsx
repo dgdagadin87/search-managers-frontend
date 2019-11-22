@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -296,6 +298,15 @@ class DistributorsForm extends Component {
         );
     }
 
+};
+
+DistributorsForm.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    orderData: PropTypes.object.isRequired,
+    visible: PropTypes.bool.isRequired,
+    distributors: PropTypes.array.isRequired,
+    distributorsData: PropTypes.object.isRequired,
+    distribSources: PropTypes.array.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DistributorsForm);

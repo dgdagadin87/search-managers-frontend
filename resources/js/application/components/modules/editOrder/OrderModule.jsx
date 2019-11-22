@@ -323,7 +323,7 @@ class OrderModule extends Component {
 
     _renderHeader() {
 
-        const {orderData = {}, disabled = false} = this.props;
+        const {orderData = {}, disabled = false, dispatch} = this.props;
         const {
             id = null,
             name = '',

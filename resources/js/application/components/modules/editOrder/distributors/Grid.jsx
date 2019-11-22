@@ -1,5 +1,7 @@
 import React, {Component, Fragment} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -105,6 +107,7 @@ class Grid extends Component {
                 align: 'center',
                 dataIndex: 'rowPanel',
                 width: 90,
+                fixed: 'left',
                 render: (text, record) => {
 
                     return (
@@ -166,7 +169,7 @@ class Grid extends Component {
             {
                 title: 'Дата',
                 dataIndex: 'distDate',
-                width: 80,
+                width: 90,
                 align: 'center',
                 render: (dateValue) => {
                     if (!dateValue){
@@ -199,28 +202,30 @@ class Grid extends Component {
                     title="Перечень дистрибьюторов"
                     style={{marginTop: '10px'}}
                 >
-                    <div style={{ maxWidth: '1000px', overflow: 'scroll', maxHeight: '235px'}}>
-                        <div
-                            style={{width: '1000px',height: '235px'}}
-                        >
-                            <Table
-                                sampleEmpty={true}
-                                size="small"
-                                loading={isLoading}
-                                rowKey="id"
-                                bordered={true}
-                                columns={columns}
-                                dataSource={distributors}
-                                pagination={false}
-                                title={() => <Button onClick={this._onAddHandler.bind(this)} type="primary">Добавить дистрибьютора</Button>}
-                            />
-                        </div>
-                    </div>
+                    <Table
+                        sampleEmpty={true}
+                        size="small"
+                        loading={isLoading}
+                        rowKey="id"
+                        bordered={true}
+                        columns={columns}
+                        dataSource={distributors}
+                        pagination={false}
+                        scroll={{ x: 1200, y: 150 }}
+                        title={() => <Button onClick={this._onAddHandler.bind(this)} type="primary">Добавить дистрибьютора</Button>}
+                    />
                 </Card>
             </Fragment>
         );
     }
 
+};
+
+Grid.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+    distributors: PropTypes.array.isRequired,
+    orderData: PropTypes.object.isRequired,
+    distribSources: PropTypes.array.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Grid);

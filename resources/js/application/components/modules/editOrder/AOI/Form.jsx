@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import PropTypes from 'prop-types';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -187,6 +189,13 @@ class AOIForm extends Component {
         );
     }
 
+};
+
+AOIForm.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    orderData: PropTypes.object.isRequired,
+    visible: PropTypes.bool.isRequired,
+    aoiData: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AOIForm);

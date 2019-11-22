@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import 'core-js/es6/map';
 import 'core-js/es6/set';
 import 'core-js/es6/promise';
@@ -8,7 +9,8 @@ import React from 'react';
 import reactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
-import thunk from 'redux-thunk'
+import thunk from 'redux-thunk';
+import createSagaMiddleware  from 'redux-saga';
 import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 
@@ -20,11 +22,16 @@ import {createUrl} from '../core/coreUtils';
 import {defaultSettings, urlSettings} from '../config/settings';
 
 import AppContainer from './components/AppContainer';
+
 import actions from '../config/actions';
+import { deleteAoiSaga } from './actions/aoi';
 
 const rootDomComponent = document.getElementById('main-body');
 
-const store = createStore(allReducers, applyMiddleware(thunk));
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(allReducers, applyMiddleware(thunk, sagaMiddleware));
+
+sagaMiddleware.run(deleteAoiSaga);
 
 Request.send({
     url: createUrl(defaultSettings, urlSettings['common']),

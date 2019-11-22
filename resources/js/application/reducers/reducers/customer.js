@@ -19,7 +19,10 @@ const initialState = {
         mobilePhone: '',
         position: '',
         homePage: '',
-        orgType: '48'
+        orgType: '48',
+        isRegistered: false,
+        regName: '',
+        regPass: ''
     }
 };
 
