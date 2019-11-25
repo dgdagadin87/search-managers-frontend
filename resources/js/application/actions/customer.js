@@ -108,9 +108,10 @@ export const asyncRegisterUser = (dataToSend) => {
             url: createUrl(defaultSettings, urlSettings['registerUser']),
             data: dataToSend
         })
-        .then( () => {
+        .then( (data) => {
 
             dispatch({ type: actions['CUSTOMER_SET_DISABLED'], payload: false });
+            dispatch({ type: actions['CUSTOMER_SET_DATA'], payload: { ...data, isRegistered: true } });
 
             Message.success('Пользователь успешно зарегистрирован на Космоснимках', 3);
         })

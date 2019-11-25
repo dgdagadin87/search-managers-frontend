@@ -44,33 +44,9 @@ class Grid extends Component {
                 }
             },
             {
-                title: 'Заказчик',
-                dataIndex: 'client',
-                key: 'client',
-                width: 250,
-                render: (client) => {
-                    const {name = ''} = client;
-                    return name;
-                },
-                sorter: false
-            },
-            {
-                title: 'Организация',
-                dataIndex: 'client',
-                key: 'organization',
-                width: 180,
-                render: (client) => {
-                    const {agent = ''} = client;
-                    const substredText = agent.length > 20 ? agent.substr(0, 20) + '..' : agent;
-                    return <span title={agent}>{substredText}</span>;
-                },
-                style: {background:'red'},
-                sorter: false
-            },
-            {
                 title: 'Статус',
                 dataIndex: 'stateId',
-                width: 130,
+                width: 150,
                 key: 'stateId',
                 align: 'center',
                 render: (stateId) => {
@@ -91,7 +67,7 @@ class Grid extends Component {
                 title: 'Источник',
                 dataIndex: 'source',
                 key: 'source',
-                width: 130,
+                width: 150,
                 align: 'center',
                 render: (source) => {
                     const {name = '', id = '0'} = source;
@@ -109,10 +85,10 @@ class Grid extends Component {
                 sorter: false
             },
             {
-                title: () => <span title="Дата поступления">Поступл.</span>,
+                title: () => <span title="Дата поступления">Поступление</span>,
                 dataIndex: 'createDate',
                 key: 'createDate',
-                width: 100,
+                width: 150,
                 align: 'center',
                 render: (dateValue) => {
                     if (!dateValue){
@@ -124,10 +100,10 @@ class Grid extends Component {
                 sorter: false
             },
             {
-                title: '№ контр.',
+                title: '№ контракта',
                 dataIndex: 'contractNumber',
                 key: 'contractNumber',
-                width: 105,
+                width: 250,
                 sorter: false,
                 render: (text) => {
                     const substredText = text.length > 12 ? text.substr(0, 12) + '..' : text;
@@ -135,10 +111,10 @@ class Grid extends Component {
                 },
             },
             {
-                title: 'М-жер',
+                title: 'Менеджер',
                 dataIndex: 'manager',
                 key: 'manager',
-                width: 110,
+                width: 250,
                 render: (manager) => {
                     if (!manager) {
                         return '';

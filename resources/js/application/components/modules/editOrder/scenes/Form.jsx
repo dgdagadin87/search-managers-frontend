@@ -387,21 +387,6 @@ class ScenesForm extends Component {
                 <Row style={{marginTop:'5px'}}>
                     <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">
-                            Курс снимка
-                        </span>
-                    </Col>
-                    <Col span={16}>
-                        <Input
-                            disabled={disabled}
-                            value={course}
-                            onChange={(e) => this._onNumberValueChange(e, 'course')}
-                            placeholder="Введите курс снимка"
-                        />
-                    </Col>
-                </Row>
-                <Row style={{marginTop:'5px'}}>
-                    <Col style={{paddingTop:'4px'}} span={8}>
-                        <span className="order-label">
                             Тип снимка
                         </span>
                     </Col>
@@ -430,19 +415,6 @@ class ScenesForm extends Component {
                 </Row>
                 <Row style={{marginTop:'5px'}}>
                     <Col style={{paddingTop:'4px'}} span={8}>
-                        <span className="order-label">Стоимость (у.е.)/км2</span>
-                    </Col>
-                    <Col span={16}>
-                        <Input
-                            disabled={disabled}
-                            value={cost}
-                            onChange={(e) => this._onNumberValueChange(e, 'cost')}
-                            placeholder="Введите cтоимость (у.е.)/км2"
-                        />
-                    </Col>
-                </Row>
-                <Row style={{marginTop:'5px'}}>
-                    <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">Площадь снимка (км2)</span>
                     </Col>
                     <Col span={16}>
@@ -456,6 +428,19 @@ class ScenesForm extends Component {
                 </Row>
                 <Row style={{marginTop:'5px'}}>
                     <Col style={{paddingTop:'4px'}} span={8}>
+                        <span className="order-label">Стоимость (у.е.)/км2</span>
+                    </Col>
+                    <Col span={16}>
+                        <Input
+                            disabled={disabled}
+                            value={cost}
+                            onChange={(e) => this._onNumberValueChange(e, 'cost')}
+                            placeholder="Введите cтоимость (у.е.)/км2"
+                        />
+                    </Col>
+                </Row>
+                <Row style={{marginTop:'5px'}}>
+                    <Col style={{paddingTop:'4px'}} span={8}>
                         <span className="order-label">Скидка данные (%)</span>
                     </Col>
                     <Col span={16}>
@@ -464,6 +449,21 @@ class ScenesForm extends Component {
                             value={discount}
                             onChange={(e) => this._onNumberValueChange(e, 'discount')}
                             placeholder="Введите скидку"
+                        />
+                    </Col>
+                </Row>
+                <Row style={{marginTop:'5px'}}>
+                    <Col style={{paddingTop:'4px'}} span={8}>
+                        <span className="order-label">
+                            Курс снимка
+                        </span>
+                    </Col>
+                    <Col span={16}>
+                        <Input
+                            disabled={disabled}
+                            value={course}
+                            onChange={(e) => this._onNumberValueChange(e, 'course')}
+                            placeholder="Введите курс снимка"
                         />
                     </Col>
                 </Row>

@@ -20,8 +20,8 @@ function checkEmail (value) {
 }
 
 function createUrl (settings, url) {
-    return settings['serverProtocol'] + '://' + settings['serverHost'] + ':' + settings['serverPort'] + url;
-    //return url;
+    //return settings['serverProtocol'] + '://' + settings['serverHost'] + ':' + settings['serverPort'] + url;
+    return url;
 }
 
 function formatDate(date, forShow = false) {

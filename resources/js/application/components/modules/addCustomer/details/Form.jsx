@@ -241,8 +241,8 @@ class Form extends Component {
                         />
                         {id ? <Popover
                             content={<Fragment>
-                                {'Пользователь'}<br />
-                                {'Password'}<br />
+                                {regName}<br />
+                                {regPass}<br />
                                 <a onClick={this._hide.bind(this)}>Закрыть</a>
                             </Fragment>}
                             title="Реквизиты"

@@ -136,7 +136,7 @@ class Grid extends Component {
                 }
             },
             {
-                title: 'Аккаунт',
+                title: 'Тип съемки',
                 dataIndex: 'account',
                 width: 150
             },
