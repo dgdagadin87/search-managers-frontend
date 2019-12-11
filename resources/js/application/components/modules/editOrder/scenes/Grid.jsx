@@ -112,10 +112,7 @@ class Grid extends Component {
 
         return (
             <Fragment>
-                Стоимость сцен (руб): <strong>{scenesCost}</strong><br />
-                Стоимость площ. (руб): <strong>{squaresCost}</strong><br />
-                Обработка (руб): <strong>{handling}</strong><br />
-                Сумма (руб): <strong>{sum}</strong>
+                Сумма (руб): <strong>{Math.round(sum * 100) / 100}</strong>
             </Fragment>
         )
     }
@@ -242,7 +239,7 @@ class Grid extends Component {
                 >
                     <Table
                         sampleEmpty={true}
-                        scroll={{ x: 1200, y: 150 }}
+                        scroll={{ x: 1200, y: 750 }}
                         size="small"
                         loading={isLoading}
                         rowKey="id"
